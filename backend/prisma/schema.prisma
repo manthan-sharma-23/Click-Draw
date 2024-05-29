@@ -30,8 +30,9 @@ model Task {
   user    User     @relation(fields: [userId], references: [id])
   userId  Int
 
-  signature String
-  amount    String
+  signature  String
+  amount     String
+  Submission Submission[]
 }
 
 model Balance {
@@ -42,8 +43,8 @@ model Balance {
 }
 
 model Option {
-  id        Int    @id @default(autoincrement())
-  image_url String
+  id          Int          @id @default(autoincrement())
+  image_url   String
   task        Task         @relation(fields: [taskId], references: [id])
   taskId      Int
   submissions Submission[]
@@ -52,9 +53,12 @@ model Option {
 model Submission {
   id Int @id @default(autoincrement())
 
+  task Task @relation(fields: [taskId], references: [id])
+
   worker   Worker @relation(fields: [workerId], references: [id])
   workerId Int
 
   option   Option? @relation(fields: [optionId], references: [id])
   optionId Int?
+  taskId   Int
 }

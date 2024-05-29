@@ -1,12 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { createTaskInput } from "../../types/types";
 import database from "../../db";
 
-export const create_task_controller = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const create_task_controller = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.user?.userId);
 

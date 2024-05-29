@@ -1,11 +1,14 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { Request, Response } from "express";
-import { BUCKET_NAME_S3 } from "../utils/env";
-import { ImageKeyGenerator } from "../utils/generator-functions/image-key.generator";
+import { BUCKET_NAME_S3 } from "../../utils/env";
+import { ImageKeyGenerator } from "../../utils/generator-functions/image-key.generator";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3Client } from "../aws/s3/client.s3";
+import { s3Client } from "../../aws/s3/client.s3";
 
-export const PreSignedUrl_Controller = async (req: Request, res: Response) => {
+export const pre_signed_url_controller = async (
+  req: Request,
+  res: Response
+) => {
   try {
     const userId = req.user?.userId;
 
