@@ -25,7 +25,7 @@ model User {
 
 model Task {
   id      Int      @id @default(autoincrement())
-  title   String
+  title   String?
   options Option[]
   user    User     @relation(fields: [userId], references: [id])
   userId  Int
@@ -42,9 +42,8 @@ model Balance {
 }
 
 model Option {
-  id          Int          @id @default(autoincrement())
-  image_url   String
-  optiona_id  Int
+  id        Int    @id @default(autoincrement())
+  image_url String
   task        Task         @relation(fields: [taskId], references: [id])
   taskId      Int
   submissions Submission[]
