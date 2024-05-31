@@ -17,4 +17,52 @@ model User {
   id      Int     @id @default(autoincrement())
   name    String?
   address String  @unique
+  tasks   Task[]
+}
+
+enum TaskStatus {
+  ACTIVE
+  CLOSED
+}
+
+model Task {
+  id            Int           @id @default(autoincrement())
+  title         String
+  description   String?
+  options       Option[]
+  user          User          @relation(fields: [userId], references: [id])
+  userId        Int
+  funds         Int           @db.Integer // Store amount funded to each task in lamports
+  responses     Int           @default(0)
+  responseLimit Int           @default(15)
+  Submissions   Submissions[]
+  status        TaskStatus    @default(ACTIVE)
+
+  @@unique([userId, id])
+}
+
+model Option {
+  id          String        @id @default(uuid())
+  serial_no   Int?          @default(0)
+  image_url   String
+  tasks       Task          @relation(fields: [taskId], references: [id])
+  taskId      Int
+  submissions Submissions[]
+}
+
+model Worker {
+  id          Int           @id @default(autoincrement())
+  name        String?
+  address     String
+  submissions Submissions[]
+}
+
+model Submissions {
+  id       String @id @default(uuid())
+  option   Option @relation(fields: [optionId], references: [id])
+  optionId String
+  Worker   Worker @relation(fields: [workerId], references: [id])
+  workerId Int
+  task     Task   @relation(fields: [taskId], references: [id])
+  taskId   Int
 }
