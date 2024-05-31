@@ -7,11 +7,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        tinted: "#000000ef",
-        tintwhite: "#F5F5F5"
+        tinted: "#0F1214",
+        tintwhite: "#F5F5F5",
+        tintdark:"#1D2126"
       }
       , fontFamily: {
         roboto: "Roboto Mono, monospace"
+        , poppins: "Poppins, sans-serif"
       }
     },
   },
