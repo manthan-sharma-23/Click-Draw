@@ -1,7 +1,16 @@
-import { Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import {
+  Controller,
+  Post,
+  Req,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+
 import { AuthGuard } from 'src/engine/core/guards/Authorization.guard';
 import { TasksService } from './tasks.service';
+import { Request } from 'express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('v1/tasks')
 export class TasksController {
@@ -9,7 +18,11 @@ export class TasksController {
 
   @Post('create-task')
   @UseGuards(AuthGuard)
-  async createTask(@Req() req: Request) {
-    return await this.tasksService.createTask(req);
+  @UseInterceptors(FilesInterceptor('files'))
+  async createTask(
+    @Req() req: Request,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    return await this.tasksService.createTask(req, files);
   }
 }

@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.use(bodyParser.json({ limit: '50mb' })); // Adjust size as per your requirement
-  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // Adjust size as per your requirement
+  app.use(bodyParser.urlencoded({ extended: true })); // Adjust size as per your requirement
 
   await app.listen(3200);
 }

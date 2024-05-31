@@ -19,56 +19,65 @@ export class TasksService {
     private s3Service: S3Service,
   ) {}
 
-  async createTask(request: Request) {
+  async createTask(request: Request, files: Array<Express.Multer.File>) {
     try {
       const { user, body } = request;
+      const obj = {
+        title: String(body.title),
+        description: String(body.description),
+        funds: Number(body.funds),
+      };
 
-      const data = create_tasks_input.parse(body);
+      const data = create_tasks_input.parse(obj);
 
       if (!user) throw new UnauthorizedException();
 
       if (!data) throw new ConflictException();
 
-      const task = await this.databaseService.$transaction(async (tx) => {
-        const task = await tx.task.create({
-          data: {
-            title: data.title,
-            description: data.description,
-            funds: data.funds,
+      const uploads = await Promise.all(
+        files.map(async (file) => {
+          const { url, key } = await this.s3Service.generate_presigned_url({
             userId: user.userId,
+          });
+
+          await axios.put(url, file.buffer, {
+            headers: {
+              'Content-Type': file.mimetype,
+            },
+          });
+
+          const uploadedUrl = this.cfService.get_cf_image_url({
+            imageKey: key,
+          });
+
+          return {
+            image_url: uploadedUrl,
+          };
+        }),
+      );
+
+      const task = await this.databaseService.task.create({
+        data: {
+          title: data.title,
+          description: data.description,
+          funds: data.funds,
+          userId: user.userId,
+        },
+      });
+      uploads.forEach(async (u, index) => {
+        await this.databaseService.option.create({
+          data: {
+            taskId: task.id,
+            image_url: u.image_url,
+            serial_no: index + 1,
           },
         });
-
-        tx.option.createMany({
-          data: await Promise.all(
-            data.options.map(async (img, index) => {
-              const { url, key } = await this.s3Service.generate_presigned_url({
-                userId: user.userId,
-                taskId: task.id,
-              });
-
-              await axios.put(url, img);
-
-              const uploadedUrl = this.cfService.get_cf_image_url({
-                imageKey: key,
-              });
-
-              return {
-                image_url: uploadedUrl,
-                taskId: task.id,
-                serial_no: index,
-              };
-            }),
-          ),
-        });
-
-        return task;
       });
 
       return task;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error);
     }
   }
 }

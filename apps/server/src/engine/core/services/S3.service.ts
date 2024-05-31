@@ -20,24 +20,12 @@ export class S3Service {
     });
   }
 
-  private image_key_generator({
-    userId,
-    taskId,
-  }: {
-    userId: number;
-    taskId: number;
-  }) {
-    return `click-draw/${userId}/${taskId}/${Math.random() * 100000}/image.jpg`;
+  private image_key_generator({ userId }: { userId: number }) {
+    return `click-draw/${userId}/${Math.random() * 100000}/image.jpg`;
   }
 
-  async generate_presigned_url({
-    userId,
-    taskId,
-  }: {
-    userId: number;
-    taskId: number;
-  }) {
-    const key = this.image_key_generator({ userId, taskId });
+  async generate_presigned_url({ userId }: { userId: number }) {
+    const key = this.image_key_generator({ userId });
     const command = new PutObjectCommand({
       Bucket: BUCKET_NAME,
       Key: key,
