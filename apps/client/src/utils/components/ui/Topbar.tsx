@@ -67,8 +67,8 @@ const Topbar = () => {
 
 function ProfileSection({ publicKey }: { publicKey: PublicKey }) {
   return (
-    <div className="">
-      <Avvvatars value={publicKey.toString()} style="shape" />
+    <div className="cursor-pointer">
+      <Avvvatars value={publicKey.toString()} style="shape" size={34} />
     </div>
   );
 }

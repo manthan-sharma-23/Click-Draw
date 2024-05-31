@@ -21,6 +21,8 @@
     "db:migrate": "npx prisma migrate dev  --name init --schema src/engine/database/prisma/schema.prisma"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.587.0",
+    "@aws-sdk/s3-request-presigner": "^3.587.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/mapped-types": "*",
