@@ -1,4 +1,4 @@
 export interface JwtDecodedData {
-  userId: string;
+  userId: number;
   publicKey: string;
 }

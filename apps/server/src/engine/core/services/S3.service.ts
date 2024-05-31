@@ -24,8 +24,8 @@ export class S3Service {
     userId,
     taskId,
   }: {
-    userId: string;
-    taskId: string;
+    userId: number;
+    taskId: number;
   }) {
     return `click-draw/${userId}/${taskId}/${Math.random() * 100000}/image.jpg`;
   }
@@ -34,8 +34,8 @@ export class S3Service {
     userId,
     taskId,
   }: {
-    userId: string;
-    taskId: string;
+    userId: number;
+    taskId: number;
   }) {
     const key = this.image_key_generator({ userId, taskId });
     const command = new PutObjectCommand({
