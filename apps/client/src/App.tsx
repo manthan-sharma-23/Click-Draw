@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RootLayout from "./utils/components/layouts/RootLayout";
 import HomePage from "./pages/home/HomePage";
 import { WalletAdapter } from "./lib/core/wallet/WalletAdapter";
+import CreateTask from "./pages/create-task/Create-task";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<RootLayout />}>
                   <Route index element={<HomePage />} />
+                  <Route path="/create-task" element={<CreateTask />} />
                 </Route>
               </Routes>
             </BrowserRouter>

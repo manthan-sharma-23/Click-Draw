@@ -16,8 +16,8 @@ const HomePage = () => {
   const onSubmit = async () => {
     try {
       const formData = new FormData();
-      formData.append("title", "Name");
-      formData.append("funds", "10000");
+      const data = { title: "Hey there", funds: 10000 };
+      formData.append("data", JSON.stringify(data));
 
       files.forEach((file, index) => {
         formData.append("files", file);
@@ -41,7 +41,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full px-10">
       <br />
       <br />
       <br />
