@@ -37,6 +37,8 @@ model Task {
   responseLimit Int           @default(15)
   Submissions   Submissions[]
   status        TaskStatus    @default(ACTIVE)
+  signature     String
+  worker        Int           @default(15)
 
   @@unique([userId, id])
 }

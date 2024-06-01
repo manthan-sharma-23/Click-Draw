@@ -22,11 +22,9 @@ export class TasksService {
   async createTask(request: Request, files: Array<Express.Multer.File>) {
     try {
       const { user, body } = request;
-      const obj = {
-        title: String(body.title),
-        description: String(body.description),
-        funds: Number(body.funds),
-      };
+      const obj = JSON.parse(body.data);
+
+      console.log(obj, user);
 
       const data = create_tasks_input.parse(obj);
 
@@ -56,12 +54,15 @@ export class TasksService {
         }),
       );
 
+      // Database Query
       const task = await this.databaseService.task.create({
         data: {
           title: data.title,
           description: data.description,
           funds: data.funds,
           userId: user.userId,
+          signature: data.signature,
+          worker: data.worker,
         },
       });
       uploads.forEach(async (u, index) => {
