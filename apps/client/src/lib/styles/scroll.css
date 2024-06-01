@@ -1,0 +1,17 @@
+/* Custom scrollbar for WebKit browsers (Chrome, Safari) */
+.custom-scrollbar::-webkit-scrollbar {
+  margin: 3px;
+  width: 6px; /* Width of the vertical scrollbar */
+  height: 12px; /* Height of the horizontal scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #25252500; /* Color of the scrollbar track */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  margin-left: 3px;
+  background-color: #888; /* Color of the scrollbar handle */
+  border-radius: 10px; /* Rounded corners */
+}

@@ -25,6 +25,7 @@ export interface Task {
   Submissions: Submission[];
   status: TaskStatus;
   signature: string;
+  worker: number;
 }
 
 // Option model interface

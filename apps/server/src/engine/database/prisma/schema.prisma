@@ -35,7 +35,7 @@ model Task {
   funds         Int           @db.Integer // Store amount funded to each task in lamports
   responses     Int           @default(0)
   responseLimit Int           @default(15)
-  Submissions   Submissions[]
+  submissions   Submissions[]
   status        TaskStatus    @default(ACTIVE)
   signature     String
   worker        Int           @default(15)

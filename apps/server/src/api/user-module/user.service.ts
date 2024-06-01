@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
   NotImplementedException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PublicKey } from '@solana/web3.js';
 import { Request } from 'express';
@@ -53,6 +54,29 @@ export class UserService {
     } catch (error) {
       console.error('ERROR:', error);
       throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async getUser(request: Request) {
+    try {
+      const user = request.user;
+      if (!user.userId || !user.publicKey) throw new UnauthorizedException();
+
+      const User = await this.databaseService.user.findUnique({
+        where: {
+          id: user.userId,
+          address: user.publicKey,
+        },
+        include: {
+          tasks: true,
+        },
+      });
+
+      if (!User) throw new NotFoundException();
+      return User;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
     }
   }
 }

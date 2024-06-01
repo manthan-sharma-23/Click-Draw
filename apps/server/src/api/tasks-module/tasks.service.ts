@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { DatabaseService } from '../../engine/database/database.service';
@@ -23,8 +24,6 @@ export class TasksService {
     try {
       const { user, body } = request;
       const obj = JSON.parse(body.data);
-
-      console.log(obj, user);
 
       const data = create_tasks_input.parse(obj);
 
@@ -79,6 +78,33 @@ export class TasksService {
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(error);
+    }
+  }
+
+  async getTask(request: Request) {
+    try {
+      const user = request.user;
+
+      console.log(user);
+
+      if (!user.userId || !user.publicKey) throw new UnauthorizedException();
+
+      const tasks = await this.databaseService.task.findMany({
+        where: {
+          userId: user.userId,
+        },
+        include: {
+          options: true,
+          submissions: true,
+        },
+      });
+
+      if (!tasks) throw new NotFoundException();
+
+      return tasks;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
     }
   }
 }

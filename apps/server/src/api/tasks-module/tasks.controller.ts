@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Post,
   Req,
   UploadedFiles,
@@ -24,5 +25,11 @@ export class TasksController {
     @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
     return await this.tasksService.createTask(req, files);
+  }
+
+  @Get('list')
+  @UseGuards(AuthGuard)
+  async getTasks(@Req() req: Request) {
+    return await this.tasksService.getTask(req);
   }
 }

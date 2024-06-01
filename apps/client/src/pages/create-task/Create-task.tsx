@@ -1,4 +1,11 @@
-import { Alert, Button, Slider, TextField } from "@mui/material";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  LinearProgress,
+  Slider,
+  TextField,
+} from "@mui/material";
 import { IoAdd } from "react-icons/io5";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { useEffect, useState } from "react";
@@ -14,7 +21,9 @@ import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { CreateTaskInServer } from "../../lib/core/server_calls/tasks/create-tasks";
 
 const CreateTask = () => {
+  const [progress, setProgress] = useState<null | number>(null);
   const [taskInput, setTaskInput] = useRecoilState(CreateTaskAtom);
+  const [loading, setLoading] = useState(false);
   const resetInput = useResetRecoilState(CreateTaskAtom);
   const [files, setFiles] = useState<File[]>([]);
   const [signature, setTxSignature] = useState("");
@@ -43,11 +52,19 @@ const CreateTask = () => {
   };
 
   const SendSolCall = async () => {
+    setTxError("");
+    setTxSignature("");
     if (!taskInput.title || files.length === 0) {
       setTxError("Invalid Inputs");
       return;
     }
+    if (files.length === 1) {
+      setTxError("Choose more than one file to Poll");
+      return;
+    }
     try {
+      setProgress(5);
+      setLoading(true);
       const transaction = new Transaction().add(
         SystemProgram.transfer({
           fromPubkey: publicKey!,
@@ -55,7 +72,6 @@ const CreateTask = () => {
           lamports: taskInput.funds,
         })
       );
-      console.log("Txs ", transaction);
       const {
         context: { slot: minContextSlot },
         value: { blockhash, lastValidBlockHeight },
@@ -64,6 +80,8 @@ const CreateTask = () => {
       const signature = await sendTransaction(transaction, connection, {
         minContextSlot,
       });
+
+      setProgress(25);
       console.log(signature);
       await connection.confirmTransaction({
         blockhash,
@@ -73,26 +91,62 @@ const CreateTask = () => {
       setTxSignature(signature);
       setTxError("");
 
+      setProgress(45);
+
       const task = await CreateTaskInServer({
         files,
         task: { ...taskInput, signature },
       });
 
-      if (task) resetInput();
+      setProgress(80);
+
+      if (task) {
+        setLoading(false);
+        resetInput();
+        setFiles([]);
+        setTxError("");
+        setTxSignature("");
+      }
+
+      setProgress(100);
+      setProgress(null);
     } catch (error) {
+      setLoading(false);
       console.log(error);
       setTxError(String((error as { message: string }).message));
     }
   };
 
   return (
-    <div className="h-full w-full p-3 px-5 flex flex-col items-start justify-start gap-3">
+    <div className="h-full w-full p-3 px-5 flex flex-col items-start justify-start gap-3 ">
+      {progress && (
+        <div className="my-2">
+          <LinearProgress
+            variant="determinate"
+            color="inherit"
+            value={progress}
+          />
+        </div>
+      )}
+      <div className="w-full text-white">
+        {signature && (
+          <Alert variant="filled" severity="success" sx={{ width: "100%" }}>
+            Your Solana Tranaction Was A Success tx Id :{signature}
+          </Alert>
+        )}
+        {txError && (
+          <Alert variant="filled" severity="error" sx={{ width: "100%" }}>
+            Failed Transaction : {txError}
+          </Alert>
+        )}
+      </div>
       <div className="text-2xl flex justify-between w-full items-center font-poppins font-semibold underline">
         <p>Create Task</p>
         <IoIosInformationCircleOutline className="cursor-pointer text-2xl text-white/55 hover:text-yellow-300" />
       </div>
       <div className="w-full flex flex-col mt-5">
         <TextField
+          disabled={loading}
           value={taskInput.title}
           onChange={(e) =>
             setTaskInput((v) => ({ ...v, title: e.target.value }))
@@ -104,6 +158,7 @@ const CreateTask = () => {
       </div>
       <div className="w-full flex flex-col my-3">
         <TextField
+          disabled={loading}
           value={taskInput.description}
           onChange={(e) =>
             setTaskInput((v) => ({ ...v, description: e.target.value }))
@@ -117,12 +172,14 @@ const CreateTask = () => {
       </div>
       <div className="w-full flex justify-between items-center my-3 ">
         <TextField
+          disabled={loading}
           sx={{
-            width: "5rem",
+            width: "9rem",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
+          label="Workers"
           value={taskInput.worker}
           className="text-white  font-poppins"
           onChange={(e) =>
@@ -130,7 +187,8 @@ const CreateTask = () => {
           }
         />
         <Slider
-          sx={{ width: "90%" }}
+          disabled={loading}
+          sx={{ width: "85%" }}
           min={15}
           max={75}
           step={5}
@@ -164,34 +222,28 @@ const CreateTask = () => {
             ))}
         </div>
       </div>
-      <div className="w-full text-white">
-        {signature && (
-          <Alert variant="filled" severity="success" sx={{ width: "100%" }}>
-            Your Solana Tranaction Was A Success tx Id :{signature}
-          </Alert>
-        )}
-        {txError && (
-          <Alert variant="filled" severity="error" sx={{ width: "100%" }}>
-            Failed Transaction : {txError}
-          </Alert>
-        )}
-      </div>
+
       <div className="flex justify-between items-center w-full">
         <div className="font-medium text-lg flex items-center gap-3">
           Total Amount: {taskInput.funds} {"(lamports)"}{" "}
           <SiSolana className="text-purple-400" />
         </div>
         <Button
+          disabled={loading}
           onClick={() => {
             SendSolCall();
           }}
           variant="contained"
           size="large"
         >
-          <div className="flex gap-3 items-center">
-            Pay SOL
-            <SiSolana className="text-purple-600" />
-          </div>
+          {loading ? (
+            <CircularProgress size="medium" />
+          ) : (
+            <div className="flex gap-3 items-center">
+              Pay SOL
+              <SiSolana className="text-purple-600" />
+            </div>
+          )}
         </Button>
       </div>
     </div>
