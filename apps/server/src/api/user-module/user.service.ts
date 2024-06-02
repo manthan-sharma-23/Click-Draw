@@ -21,7 +21,6 @@ export class UserService {
     try {
       const { publicKey, signString, signature } = request.body;
 
-      console.log(typeof publicKey);
       if (!publicKey || typeof publicKey !== 'string') {
         throw new ConflictException('Public key is missing or not a string');
       }

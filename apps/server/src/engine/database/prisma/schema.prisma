@@ -55,7 +55,7 @@ model Option {
 model Worker {
   id          Int           @id @default(autoincrement())
   name        String?
-  address     String
+  address     String        @unique
   submissions Submissions[]
 }
 
