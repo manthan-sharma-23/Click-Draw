@@ -18,7 +18,11 @@ export class AuthGuard implements CanActivate {
     if (token.startsWith('Bearer ')) token = token.split(' ')[1];
     const data = this.jwtService.decodeToken({ token });
 
-    request.user = data;
+    if (data.workerId) {
+      request.worker = data;
+    } else {
+      request.user = data;
+    }
 
     return true;
   }

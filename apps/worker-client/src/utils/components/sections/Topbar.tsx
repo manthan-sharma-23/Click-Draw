@@ -11,6 +11,9 @@ import { generate_functional_string_for_signature } from "@/lib/core/functions/g
 import axios from "axios";
 import { BACKEND_URL } from "@/utils/config/env";
 import { useEffect } from "react";
+import { getWorkerFromDb } from "@/lib/core/server_calls/worker/getWorker.server_call";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
+import { WorkerAtom } from "../../../lib/core/store/atom/worker.atom";
 
 const navOptions = [
   {
@@ -29,6 +32,8 @@ const navOptions = [
 
 const Topbar = () => {
   const { publicKey, signMessage } = useWallet();
+  const setWorker = useSetRecoilState(WorkerAtom);
+  const reset_worker = useResetRecoilState(WorkerAtom);
   const [signString, encodedString] =
     generate_functional_string_for_signature();
 
@@ -47,7 +52,15 @@ const Topbar = () => {
     });
     const token: string = result.data.token;
 
-    if (token) window.localStorage.setItem("token", token);
+    if (token) {
+      window.localStorage.setItem("token", token);
+      const data = await getWorkerFromDb({ token });
+      if (data) {
+        setWorker(data);
+      } else {
+        reset_worker();
+      }
+    }
   };
 
   const { pathname } = useLocation();
@@ -76,6 +89,11 @@ const Topbar = () => {
         <div>
           {publicKey ? (
             <WalletDisconnectButton
+              onClick={() => {
+                window.localStorage.clear();
+                reset_worker();
+              }}
+              
               style={{
                 backgroundColor: "white",
                 color: "black",

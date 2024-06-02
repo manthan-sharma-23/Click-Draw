@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   NotImplementedException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -62,6 +63,28 @@ export class WorkerService {
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(error.message as string);
+    }
+  }
+
+  async getWorker(req: Request) {
+    try {
+      const { workerId, publicKey } = req.worker;
+
+      if (!workerId || !publicKey) throw new UnauthorizedException();
+
+      const worker = await this.databaseService.worker.findUnique({
+        where: {
+          id: workerId,
+          address: publicKey,
+        },
+      });
+
+      if (!worker) throw new NotFoundException();
+
+      return worker;
+    } catch (error) {
+      console.log('error ', error);
+      throw new InternalServerErrorException();
     }
   }
 }
