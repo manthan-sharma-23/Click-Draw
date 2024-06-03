@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { DatabaseService } from '../../engine/database/database.service';
 import { Request } from 'express';
-import { create_tasks_input } from 'src/engine/types/tasks.types';
+import { create_tasks_input } from 'src/engine/types/zod.types';
 import { CloudFrontService } from '../../engine/core/services/CloudFront.service';
 import { S3Service } from 'src/engine/core/services/S3.service';
 import axios from 'axios';
