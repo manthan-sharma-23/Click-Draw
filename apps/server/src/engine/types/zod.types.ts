@@ -11,3 +11,7 @@ export const create_tasks_input = z.object({
 export const get_submission_by_id_input = z.object({
   submissionId: z.string(),
 });
+
+export const get_task_results_input = z.object({
+  taskId: z.number(),
+});

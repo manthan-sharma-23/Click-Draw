@@ -7,10 +7,14 @@ import {
 } from '@nestjs/common';
 import { DatabaseService } from '../../engine/database/database.service';
 import { Request } from 'express';
-import { create_tasks_input } from 'src/engine/types/zod.types';
+import {
+  create_tasks_input,
+  get_task_results_input,
+} from 'src/engine/types/zod.types';
 import { CloudFrontService } from '../../engine/core/services/CloudFront.service';
 import { S3Service } from 'src/engine/core/services/S3.service';
 import axios from 'axios';
+import { OptionStatistics } from 'src/engine/types/app.wide.types';
 
 @Injectable()
 export class TasksService {
@@ -107,6 +111,43 @@ export class TasksService {
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException();
+    }
+  }
+
+  async getTaskResult(req: Request) {
+    try {
+      const data = get_task_results_input.parse(req.body);
+
+      const task = await this.databaseService.task.findUniqueOrThrow({
+        where: { id: data.taskId },
+        include: {
+          submissions: true,
+          options: true,
+        },
+      });
+
+      const recordObj = {};
+      task.options.forEach((option) => {
+        recordObj[option.id] = { option, percentage: 0 };
+      });
+
+      task.submissions.forEach((submission) => {
+        const record = recordObj[submission.optionId];
+        const percent = record.percentage;
+
+        recordObj[submission.optionId] = {
+          ...record,
+          percentage: (percent + 1) / task.responses,
+        };
+      });
+
+      const result = Object.values(recordObj);
+      console.log(result);
+
+      return { task, result };
+    } catch (error) {
+      console.log('ERROR : ', error);
+      throw new InternalServerErrorException(error);
     }
   }
 }

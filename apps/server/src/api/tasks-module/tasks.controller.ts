@@ -32,4 +32,10 @@ export class TasksController {
   async getTasks(@Req() req: Request) {
     return await this.tasksService.getTask(req);
   }
+
+  @Get('result')
+  @UseGuards(AuthGuard)
+  async getTaskResult(@Req() req: Request) {
+    return await this.tasksService.getTaskResult(req);
+  }
 }
