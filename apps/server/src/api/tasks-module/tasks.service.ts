@@ -62,6 +62,8 @@ export class TasksService {
           userId: user.userId,
           signature: data.signature,
           worker: data.worker,
+          responseLimit: data.worker,
+          status: 'ACTIVE',
         },
       });
       uploads.forEach(async (u, index) => {

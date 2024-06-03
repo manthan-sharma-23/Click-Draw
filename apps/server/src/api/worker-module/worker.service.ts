@@ -87,4 +87,40 @@ export class WorkerService {
       throw new InternalServerErrorException();
     }
   }
+
+  async getWorkerTasks(req: Request) {
+    try {
+      const { workerId, publicKey } = req.worker;
+
+      if (!workerId || !publicKey) throw new UnauthorizedException();
+
+      const transactions = await this.databaseService.task.findMany({
+        where: {
+          AND: [
+            {
+              responseLimit: {
+                gt: 0,
+              },
+            },
+            {
+              submissions: {
+                none: {
+                  workerId: workerId,
+                },
+              },
+            },
+          ],
+        },
+        include: {
+          options: true,
+          user: true,
+        },
+      });
+
+      return transactions || [];
+    } catch (error) {
+      console.log('ERROR :', error);
+      throw new InternalServerErrorException();
+    }
+  }
 }

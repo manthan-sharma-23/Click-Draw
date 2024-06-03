@@ -16,4 +16,10 @@ export class WorkerController {
   async getWorker(@Req() req: Request) {
     return await this.workerService.getWorker(req);
   }
+
+  @Get('/tasks')
+  @UseGuards(AuthGuard)
+  async getTasksForWorker(@Req() req: Request) {
+    return await this.workerService.getWorkerTasks(req);
+  }
 }

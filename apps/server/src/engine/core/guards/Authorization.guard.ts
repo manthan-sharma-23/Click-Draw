@@ -9,6 +9,7 @@ import { JwtService } from '../services/Jwt.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
+
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     let token = request.headers.authorization as string;
