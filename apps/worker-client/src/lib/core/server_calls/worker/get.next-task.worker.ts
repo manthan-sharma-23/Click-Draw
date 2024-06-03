@@ -16,6 +16,8 @@ export const getNextTask = async ({ token }: { token: string }) => {
 
     return data;
   } catch (error) {
-    throw new Error(error as string);
+    // throw new Error(error as string);
+    console.log(error);
+    return null;
   }
 };

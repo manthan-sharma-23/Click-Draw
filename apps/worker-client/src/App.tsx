@@ -5,6 +5,7 @@ import RootLayout from "./utils/components/layouts/RootLayout";
 import Home from "./pages/home/Home";
 import Analytics from "./pages/Analytics/Analytics";
 import Tasks from "./pages/Tasks/Tasks";
+import TaskById from "./pages/Tasks/TaskById";
 const App = () => {
   return (
     <div className="h-screen w-screen">
@@ -17,6 +18,7 @@ const App = () => {
                 <Route path="/tasks" element={<Tasks />} />
                 <Route path="/analytics" element={<Analytics />} />
                 <Route path="/profile" element={<Analytics />} />
+                <Route path="/task/:taskId" element={<TaskById />} />
               </Route>
             </Routes>
           </BrowserRouter>

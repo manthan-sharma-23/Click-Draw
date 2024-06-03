@@ -61,6 +61,9 @@ model Worker {
   address     String       @unique
   submissions Submission[]
 
+  currentAmount Int @default(0)
+  lockedAmount  Int @default(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -152,4 +152,22 @@ export class TasksService {
     }
   }
 
+  async getTaskById(id: number) {
+    try {
+      const task = await this.databaseService.task.findUniqueOrThrow({
+        where: {
+          id,
+        },
+        include: {
+          options: true,
+          user: true,
+          submissions: true,
+        },
+      });
+
+      return task;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
 }

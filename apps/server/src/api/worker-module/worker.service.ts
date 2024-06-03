@@ -157,7 +157,7 @@ export class WorkerService {
           user: true,
         },
         orderBy: {
-          createdAt: 'desc',
+          createdAt: 'asc',
         },
       });
 

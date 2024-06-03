@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Param,
   Post,
   Req,
   UploadedFiles,
@@ -37,5 +38,11 @@ export class TasksController {
   @UseGuards(AuthGuard)
   async getTaskResult(@Req() req: Request) {
     return await this.tasksService.getTaskResult(req);
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  async getTaskById(@Param('id') id: string) {
+    return await this.tasksService.getTaskById(Number(id));
   }
 }
