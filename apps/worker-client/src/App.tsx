@@ -4,6 +4,7 @@ import { WalletAdapter } from "./utils/components/utils/Wallet";
 import RootLayout from "./utils/components/layouts/RootLayout";
 import Home from "./pages/home/Home";
 import Analytics from "./pages/Analytics/Analytics";
+import Tasks from "./pages/Tasks/Tasks";
 const App = () => {
   return (
     <div className="h-screen w-screen">
@@ -13,6 +14,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<RootLayout />}>
                 <Route index element={<Home />} />
+                <Route path="/tasks" element={<Tasks />} />
                 <Route path="/analytics" element={<Analytics />} />
                 <Route path="/profile" element={<Analytics />} />
               </Route>

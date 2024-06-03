@@ -14,10 +14,11 @@ datasource db {
 }
 
 model User {
-  id      Int     @id @default(autoincrement())
-  name    String?
-  address String  @unique
-  tasks   Task[]
+  id        Int      @id @default(autoincrement())
+  name      String?
+  address   String   @unique
+  tasks     Task[]
+  createdAt DateTime @default(now())
 }
 
 enum TaskStatus {
@@ -39,6 +40,8 @@ model Task {
   status        TaskStatus   @default(ACTIVE)
   signature     String
   worker        Int          @default(15)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
   @@unique([userId, id])
 }
@@ -57,6 +60,9 @@ model Worker {
   name        String?
   address     String       @unique
   submissions Submission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Submission {
@@ -67,4 +73,6 @@ model Submission {
   workerId Int
   task     Task   @relation(fields: [taskId], references: [id])
   taskId   Int
+
+  createdAt DateTime @default(now())
 }

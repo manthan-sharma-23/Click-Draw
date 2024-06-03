@@ -21,6 +21,9 @@ CREATE TABLE "Task" (
     "responseLimit" INTEGER NOT NULL DEFAULT 15,
     "status" "TaskStatus" NOT NULL DEFAULT 'ACTIVE',
     "signature" TEXT NOT NULL,
+    "worker" INTEGER NOT NULL DEFAULT 15,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
 );
@@ -40,18 +43,21 @@ CREATE TABLE "Worker" (
     "id" SERIAL NOT NULL,
     "name" TEXT,
     "address" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Worker_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Submissions" (
+CREATE TABLE "Submission" (
     "id" TEXT NOT NULL,
     "optionId" TEXT NOT NULL,
     "workerId" INTEGER NOT NULL,
     "taskId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Submissions_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Submission_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -60,6 +66,9 @@ CREATE UNIQUE INDEX "User_address_key" ON "User"("address");
 -- CreateIndex
 CREATE UNIQUE INDEX "Task_userId_id_key" ON "Task"("userId", "id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Worker_address_key" ON "Worker"("address");
+
 -- AddForeignKey
 ALTER TABLE "Task" ADD CONSTRAINT "Task_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -67,10 +76,10 @@ ALTER TABLE "Task" ADD CONSTRAINT "Task_userId_fkey" FOREIGN KEY ("userId") REFE
 ALTER TABLE "Option" ADD CONSTRAINT "Option_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Submissions" ADD CONSTRAINT "Submissions_optionId_fkey" FOREIGN KEY ("optionId") REFERENCES "Option"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Submission" ADD CONSTRAINT "Submission_optionId_fkey" FOREIGN KEY ("optionId") REFERENCES "Option"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Submissions" ADD CONSTRAINT "Submissions_workerId_fkey" FOREIGN KEY ("workerId") REFERENCES "Worker"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Submission" ADD CONSTRAINT "Submission_workerId_fkey" FOREIGN KEY ("workerId") REFERENCES "Worker"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Submissions" ADD CONSTRAINT "Submissions_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Submission" ADD CONSTRAINT "Submission_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

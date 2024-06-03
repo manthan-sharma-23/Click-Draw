@@ -14,6 +14,7 @@ import {
 import { CloudFrontService } from '../../engine/core/services/CloudFront.service';
 import { S3Service } from 'src/engine/core/services/S3.service';
 import axios from 'axios';
+import { Task } from '@prisma/client';
 import { OptionStatistics } from 'src/engine/types/app.wide.types';
 
 @Injectable()
@@ -91,8 +92,6 @@ export class TasksService {
     try {
       const user = request.user;
 
-      console.log(user);
-
       if (!user.userId || !user.publicKey) throw new UnauthorizedException();
 
       const tasks = await this.databaseService.task.findMany({
@@ -114,7 +113,10 @@ export class TasksService {
     }
   }
 
-  async getTaskResult(req: Request) {
+  async getTaskResult(req: Request): Promise<{
+    task: Task;
+    result: OptionStatistics[];
+  }> {
     try {
       const data = get_task_results_input.parse(req.body);
 
@@ -141,8 +143,7 @@ export class TasksService {
         };
       });
 
-      const result = Object.values(recordObj);
-      console.log(result);
+      const result = Object.values(recordObj) as OptionStatistics[];
 
       return { task, result };
     } catch (error) {
@@ -150,4 +151,5 @@ export class TasksService {
       throw new InternalServerErrorException(error);
     }
   }
+
 }

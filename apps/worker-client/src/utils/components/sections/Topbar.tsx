@@ -14,11 +14,17 @@ import { useEffect } from "react";
 import { getWorkerFromDb } from "@/lib/core/server_calls/worker/getWorker.server_call";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { WorkerAtom } from "../../../lib/core/store/atom/worker.atom";
+import { TasksAtom } from "@/lib/core/store/atom/tasks.atom";
+import { getWorkerTasks } from "@/lib/core/server_calls/tasks/get.worker-tasks";
 
 const navOptions = [
   {
     name: "Home",
     link: "/",
+  },
+  {
+    name: "Tasks",
+    link: "/tasks",
   },
   {
     name: "Analytics",
@@ -36,6 +42,7 @@ const Topbar = () => {
   const reset_worker = useResetRecoilState(WorkerAtom);
   const [signString, encodedString] =
     generate_functional_string_for_signature();
+  const setTasks = useSetRecoilState(TasksAtom);
 
   useEffect(() => {
     signAndSend();
@@ -62,6 +69,16 @@ const Topbar = () => {
       }
     }
   };
+
+  // const getTasks = async () => {
+  //   const token = window.localStorage.getItem("token");
+  //   if (token) {
+  //     const tasks = await getWorkerTasks({ token });
+  //     if (tasks.length > 0) {
+  //       return "/tasks";
+  //     }
+  //   }
+  // };
 
   const { pathname } = useLocation();
   return (
@@ -93,7 +110,6 @@ const Topbar = () => {
                 window.localStorage.clear();
                 reset_worker();
               }}
-              
               style={{
                 backgroundColor: "white",
                 color: "black",

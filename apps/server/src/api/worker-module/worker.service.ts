@@ -102,6 +102,7 @@ export class WorkerService {
                 gt: 0,
               },
             },
+            { status: 'ACTIVE' },
             {
               submissions: {
                 none: {
@@ -115,12 +116,55 @@ export class WorkerService {
           options: true,
           user: true,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
 
       return transactions || [];
     } catch (error) {
       console.log('ERROR :', error);
       throw new InternalServerErrorException();
+    }
+  }
+
+  async getNextTask(req: Request) {
+    try {
+      const { workerId, publicKey } = req.worker;
+
+      if (!workerId || !publicKey) throw new UnauthorizedException();
+
+      const nextTask = await this.databaseService.task.findFirstOrThrow({
+        where: {
+          AND: [
+            {
+              responseLimit: {
+                gt: 0,
+              },
+            },
+            { status: 'ACTIVE' },
+            {
+              submissions: {
+                none: {
+                  workerId: workerId,
+                },
+              },
+            },
+          ],
+        },
+        include: {
+          options: true,
+          user: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      return nextTask;
+    } catch (error) {
+      console.log('ERROR : ', error);
+      throw new InternalServerErrorException(error);
     }
   }
 }

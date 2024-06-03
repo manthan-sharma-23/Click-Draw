@@ -12,7 +12,10 @@ const RootLayout = () => {
       </div>
       <Separator className="bg-black/15" />
       <div className="h-[94.5vh] w-full flex items-center justify-center">
-        <div className="px-[10%] py-1 flex items-center justify-center">
+        <div
+          className="px-[10%] py-1 h-full w-full overflow-y-scroll overflow-x-hidden
+         flex items-center justify-center"
+        >
           <Outlet />
         </div>
       </div>
