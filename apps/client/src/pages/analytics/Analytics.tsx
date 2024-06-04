@@ -21,20 +21,20 @@ const Analytics = () => {
       <div className="h-full w-full mt-3 overflow-y-scroll custom-scrollbar">
         {tasks &&
           tasks.map((task) => (
-            <div className="my-2 p-2 px-4 cursor-pointer hover:bg-white/5 transition-all w-full h-[35vh] border border-white/30">
+            <div className="my-3 p-2 px-4 cursor-pointer hover:bg-black/5 transition-all w-full h-[35vh] border border-black/30">
               <div className="flex justify-between ">
-                <p className="text-2xl tracking-wide font-semibold text-white/70">
+                <p className="text-2xl tracking-wide font-semibold ">
                   {task.title}
                 </p>
-                <p className="text-xl tracking-wide font-normal text-white/50">
+                <p className="text-xl tracking-wide font-normal ">
                   Funds: {task.funds} lamports
                 </p>
               </div>
               <div className="flex justify-between ">
-                <p className="text-xl tracking-wide font-semibold text-white/40">
+                <p className="text-xl tracking-wide font-semibold ">
                   {task.description}
                 </p>
-                <p className="text-xl tracking-wide font-normal text-white/50">
+                <p className="text-xl tracking-wide font-normal ">
                   Workers: {task.worker}
                 </p>
               </div>

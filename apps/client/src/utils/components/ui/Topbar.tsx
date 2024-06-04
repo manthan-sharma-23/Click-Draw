@@ -10,6 +10,8 @@ import { generate_functional_string_for_signature } from "../../generators/signa
 import { Alert } from "@mui/material";
 import { PublicKey } from "@solana/web3.js";
 import Avvvatars from "avvvatars-react";
+import { SideBarOptions } from "@/utils/config/sideBar.config";
+import { Link } from "react-router-dom";
 
 const Topbar = () => {
   const { publicKey, signMessage } = useWallet();
@@ -40,10 +42,23 @@ const Topbar = () => {
   };
 
   return (
-    <div className="h-full w-full flex justify-between items-center px-[10%]">
-      <p className=" cursor-pointer font-poppins text-2xl font-semibold tracking-wider">
-        ClickDraw
-      </p>
+    <div className="h-full w-full flex justify-between items-center px-[10%] bg-black">
+      <div className="w-[50vw] h-full flex gap-[3rem] items-center ">
+        <p className="w-[15%] cursor-pointer font-poppins text-xl font-medium tracking-tighter font-mono">
+          /= ClickDraw
+        </p>
+        <div className="w-[60%] h-full flex justify-start gap-4 ">
+          {SideBarOptions.map((option, index) => (
+            <Link
+              key={index}
+              to={option.link}
+              className="items-center flex py-2 px-3 rounded-md text-white/60 hover:text-white transition-all"
+            >
+              <p className="block">{option.name}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
       <div>
         {!publicKey ? (
           <WalletMultiButton
@@ -54,6 +69,7 @@ const Topbar = () => {
             <WalletDisconnectButton
               onClick={() => {
                 window.localStorage.removeItem("token");
+                window.location.reload();
               }}
               style={{ backgroundColor: "black", height: "4.5vh" }}
             />
