@@ -26,6 +26,8 @@ export interface Task {
   status: TaskStatus;
   signature: string;
   worker: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // Option model interface

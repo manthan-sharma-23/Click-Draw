@@ -12,10 +12,14 @@ import * as nacl from 'tweetnacl';
 import { DatabaseService } from '../../engine/database/database.service';
 import * as jwt from 'jsonwebtoken';
 import { USER_SECRET_KEY } from 'src/engine/utils/config/env.config';
+import { TaskStatisticsService } from 'src/engine/core/services/Statistics.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private statsService: TaskStatisticsService,
+  ) {}
 
   async singin(request: Request) {
     try {
@@ -76,6 +80,35 @@ export class UserService {
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException();
+    }
+  }
+
+  async getLastTaskOfUserStats(req: Request) {
+    try {
+      const { userId, publicKey } = req.user;
+
+      if (!userId || !publicKey) throw new NotFoundException('User not found');
+
+      const transaction = await this.databaseService.task.findFirst({
+        where: {
+          userId,
+        },
+        include: {
+          submissions: true,
+          user: true,
+          options: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      const stats = this.statsService.getEachOptionPercentage(transaction);
+
+      return { task: transaction, result: stats };
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(error.message);
     }
   }
 }

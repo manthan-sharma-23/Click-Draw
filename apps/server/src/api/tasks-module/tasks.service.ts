@@ -16,6 +16,7 @@ import { S3Service } from 'src/engine/core/services/S3.service';
 import axios from 'axios';
 import { Task } from '@prisma/client';
 import { OptionStatistics } from 'src/engine/types/app.wide.types';
+import { TaskStatisticsService } from '../../engine/core/services/Statistics.service';
 
 @Injectable()
 export class TasksService {
@@ -23,6 +24,7 @@ export class TasksService {
     private readonly databaseService: DatabaseService,
     private readonly cfService: CloudFrontService,
     private s3Service: S3Service,
+    private statsService: TaskStatisticsService,
   ) {}
 
   async createTask(request: Request, files: Array<Express.Multer.File>) {
@@ -128,24 +130,9 @@ export class TasksService {
         },
       });
 
-      const recordObj = {};
-      task.options.forEach((option) => {
-        recordObj[option.id] = { option, percentage: 0 };
-      });
+      const taskResult = this.statsService.getEachOptionPercentage(task);
 
-      task.submissions.forEach((submission) => {
-        const record = recordObj[submission.optionId];
-        const percent = record.percentage;
-
-        recordObj[submission.optionId] = {
-          ...record,
-          percentage: (percent + 1) / task.responses,
-        };
-      });
-
-      const result = Object.values(recordObj) as OptionStatistics[];
-
-      return { task, result };
+      return { task, result: taskResult };
     } catch (error) {
       console.log('ERROR : ', error);
       throw new InternalServerErrorException(error);

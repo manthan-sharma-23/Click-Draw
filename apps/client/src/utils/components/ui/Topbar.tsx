@@ -11,10 +11,12 @@ import { Alert } from "@mui/material";
 import { PublicKey } from "@solana/web3.js";
 import Avvvatars from "avvvatars-react";
 import { SideBarOptions } from "@/utils/config/sideBar.config";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 const Topbar = () => {
   const { publicKey, signMessage } = useWallet();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     signAndSend();
@@ -52,7 +54,10 @@ const Topbar = () => {
             <Link
               key={index}
               to={option.link}
-              className="items-center flex py-2 px-3 rounded-md text-white/60 hover:text-white transition-all"
+              className={cn(
+                "items-center flex py-2 px-3 rounded-md text-white/60 hover:text-white transition-all",
+                option.link === pathname && "text-white"
+              )}
             >
               <p className="block">{option.name}</p>
             </Link>

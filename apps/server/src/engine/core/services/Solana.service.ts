@@ -9,4 +9,6 @@ export class SolanaService {
     aditional_worker_fee: 50_000,
     commision_on_each_worker: 0.2,
   };
+
+  public connection;
 }

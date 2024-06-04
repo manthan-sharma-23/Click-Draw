@@ -17,6 +17,15 @@ module.exports = {
       },
     },
     extend: {
+      colors: {
+        tinted: "#0F1214",
+        tintwhite: "#F5F5F5",
+        tintdark: "#1D2126"
+      }
+      , fontFamily: {
+        roboto: "Roboto Mono, monospace"
+        , poppins: "Poppins, sans-serif"
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
