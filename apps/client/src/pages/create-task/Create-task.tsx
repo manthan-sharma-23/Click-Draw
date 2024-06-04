@@ -118,7 +118,7 @@ const CreateTask = () => {
   };
 
   return (
-    <div className="h-full w-full p-3 px-5 flex flex-col items-start justify-start gap-3 ">
+    <div className="h-full w-full flex flex-col items-start justify-start gap-3 ">
       {progress && (
         <div className="my-2">
           <LinearProgress
@@ -201,14 +201,14 @@ const CreateTask = () => {
       </div>
       <div className="mt-4 h-auto w-full ">
         <p className="ml-2 text-xl font-medium">Add Image Options :</p>
-        <div className="w-full h-[35vh]  border border-white/20 rounded-md p-3  overflow-x-hidden">
-          <div className="hover:text-white relative h-[10rem] flex flex-wrap items-center justify-center text-3xl w-[20rem] border border-white/60 rounded-md">
+        <div className="w-full h-[35vh]  border border-black/20 rounded-md p-3  overflow-x-hidden">
+          <div className="hover:text-white relative h-[10rem] flex flex-wrap items-center justify-center text-3xl w-[20rem] border border-black/60 rounded-md">
             <input
               className="opacity-0 h-full w-full absolute cursor-pointer"
               type="file"
               onChange={handleFileChange}
             />
-            <IoAdd className="text-4xl text-white/60" />
+            <IoAdd className="text-4xl text-black/60" />
           </div>
           {files &&
             files.map((file, index) => (
