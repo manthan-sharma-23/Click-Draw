@@ -30,7 +30,10 @@ const HomePage = () => {
           </div>
         </div>
         {task ? (
-          <div className="relative w-full h-[70%] rounded-2xl bg-[#101316] border-4 cursor-pointer hover:scale-[1.01] transition-all  p-6 py-8 text-white">
+          <div
+            onClick={() => navigate(`/task/${task.task.id}`)}
+            className="relative w-full h-[70%] rounded-2xl bg-[#101316] border-4 cursor-pointer hover:scale-[1.01] transition-all  p-6 py-8 text-white"
+          >
             <CornerDownRight
               className="absolute text-white/60 top-[1rem] right-[1rem]"
               size={20}
@@ -90,7 +93,7 @@ const HomePage = () => {
             </p>
             <div className="flex justify-end items-center w-full px-2">
               <Button
-                onClick={() => navigate("/create-task")}
+                onClick={() => navigate("/analytics")}
                 className="flex items-center gap-2 bg-black text-white  transition-all"
               >
                 <CornerDownRight size={17} />

@@ -58,3 +58,13 @@ export interface Submission {
   task: Task;
   taskId: number;
 }
+
+export interface OptionStatistics {
+  option: Option;
+  percentage: number;
+}
+
+export interface TaskResult {
+  task: Task;
+  result: OptionStatistics[];
+}

@@ -34,15 +34,15 @@ export class TasksController {
     return await this.tasksService.getTask(req);
   }
 
-  @Get('result')
+  @Get('result/:taskId')
   @UseGuards(AuthGuard)
-  async getTaskResult(@Req() req: Request) {
-    return await this.tasksService.getTaskResult(req);
+  async getTaskResult(@Param('taskId') taskId: string, @Req() req: Request) {
+    return await this.tasksService.getTaskResult(req, Number(taskId));
   }
 
   @Get(':id')
   @UseGuards(AuthGuard)
-  async getTaskById(@Param('id') id: string) {
-    return await this.tasksService.getTaskById(Number(id));
+  async getTaskById(@Param('id') id: string, @Req() req: Request) {
+    return await this.tasksService.getTaskById(Number(id), req);
   }
 }

@@ -8,11 +8,14 @@ import { CircularProgress } from "@mui/material";
 import { useGetLastTaskByUser } from "@/lib/hooks/useGetLastTaskByUser";
 import { PieChart } from "@mui/x-charts/PieChart";
 import AnalyticsTable from "./AnalyticsTable";
+import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "@/utils/config/config.app";
 
 const Analytics = () => {
   const { loading, tasks } = useGetCreatedTasks();
   const { task: lastTask, loading: lastTaskLoading } = useGetLastTaskByUser();
   const user = useRecoilValue(UserAtom);
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -39,7 +42,10 @@ const Analytics = () => {
       <div className="h-auto w-full  mt-5 font-poppins">
         <div className="w-full h-[30vh]  flex gap-5 ">
           {lastTask ? (
-            <div className="overflow-hidden w-2/3 h-full flex items-center justify-center bg-darkblue border-2 border-black/70 shadow-md rounded-2xl text-white py-8 px-6  font-medium">
+            <div
+              onClick={() => navigate(`/task/${lastTask.task.id}`)}
+              className="overflow-hidden w-2/3 h-full flex items-center justify-center bg-darkblue border-2 border-black/70 shadow-md rounded-2xl text-white py-8 px-6  font-medium"
+            >
               <div className="cursor-pointer w-2/3 h-full flex flex-col justify-between items-center">
                 <p className="w-full text-4xl">Last Poll Results</p>
                 <div className="h-auto w-full text-lg flex items-center justify-center mt-4">
@@ -104,7 +110,7 @@ const Analytics = () => {
           </div>
         </div>
       </div>
-      <div className="w-full h-auto mt-5 border">
+      <div className="w-full h-auto mt-8 border">
         <AnalyticsTable tasks={tasks} />
       </div>
     </div>

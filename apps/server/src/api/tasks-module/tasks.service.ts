@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  PreconditionFailedException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { DatabaseService } from '../../engine/database/database.service';
@@ -124,20 +125,27 @@ export class TasksService {
     return newDate;
   }
 
-  async getTaskResult(req: Request): Promise<{
+  async getTaskResult(
+    req: Request,
+    taskId: number,
+  ): Promise<{
     task: Task;
     result: OptionStatistics[];
   }> {
     try {
-      const data = get_task_results_input.parse(req.body);
-
+      const { userId } = req.user;
       const task = await this.databaseService.task.findUniqueOrThrow({
-        where: { id: data.taskId },
+        where: { id: taskId },
         include: {
           submissions: true,
           options: true,
         },
       });
+      if (task.userId !== userId) {
+        throw new PreconditionFailedException(
+          'You can only view tasks analytics created by you',
+        );
+      }
 
       const taskResult = this.statsService.getEachOptionPercentage(task);
 
@@ -148,9 +156,12 @@ export class TasksService {
     }
   }
 
-  async getTaskById(id: number) {
+  async getTaskById(id: number, req: Request) {
     try {
-      const task = await this.databaseService.task.findUniqueOrThrow({
+      const { userId } = req.user;
+      if (!userId) throw new UnauthorizedException();
+
+      const task = await this.databaseService.task.findFirstOrThrow({
         where: {
           id,
         },
@@ -160,6 +171,12 @@ export class TasksService {
           submissions: true,
         },
       });
+
+      if (task.userId !== userId) {
+        throw new PreconditionFailedException(
+          'You can only view tasks analytics created by you',
+        );
+      }
 
       return task;
     } catch (error) {
