@@ -20,7 +20,8 @@ module.exports = {
       colors: {
         tinted: "#0F1214",
         tintwhite: "#F5F5F5",
-        tintdark: "#1D2126"
+        tintdark: "#1D2126",
+        darkblue: "#101316",
       }
       , fontFamily: {
         roboto: "Roboto Mono, monospace"

@@ -12,6 +12,12 @@ export class UserController {
     return await this.userService.singin(request);
   }
 
+  @Get('/')
+  @UseGuards(AuthGuard)
+  async getUser(@Req() req: Request) {
+    return await this.userService.getUser(req);
+  }
+
   @Get('last-task')
   @UseGuards(AuthGuard)
   async getLastTaskOfUserStats(@Req() req: Request) {

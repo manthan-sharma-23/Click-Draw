@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 
 const HomePage = () => {
-  const { task, error, loading } = useGetLastTaskByUser();
+  const { task } = useGetLastTaskByUser();
   console.log(task);
   const navigate = useNavigate();
 
@@ -114,7 +114,10 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        <div className="p-6 py-8 h-[70%] w-full  rounded-2xl bg-tintwhite flex flex-col items-start justify-center"></div>
+        <div className="p-6 font-mono py-8 h-[70%] w-full font-semibold text-7xl  rounded-2xl bg-tintwhite flex flex-col items-start justify-center">
+          // Click_ <br />
+          Draw ===/
+        </div>
       </div>
     </div>
   );

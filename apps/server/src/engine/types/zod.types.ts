@@ -6,6 +6,7 @@ export const create_tasks_input = z.object({
   description: z.string().nullable().default(null).optional(),
   signature: z.string(),
   worker: z.number().default(15).optional(),
+  endAt: z.date().optional(),
 });
 
 export const get_submission_by_id_input = z.object({

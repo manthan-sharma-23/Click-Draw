@@ -54,7 +54,7 @@ export class SubmissionService {
           },
         });
 
-        const limit = task.worker - task.responses + 1;
+        const limit = task.worker - (task.responses + 1);
         const status: TaskStatus = limit > 0 ? 'ACTIVE' : 'CLOSED';
 
         await tx.task.update({

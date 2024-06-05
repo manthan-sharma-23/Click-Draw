@@ -71,6 +71,7 @@ export class TasksService {
           worker: data.worker,
           responseLimit: data.worker,
           status: 'ACTIVE',
+          endAt: this.addDaysToDate(data.endAt || new Date(), 5),
         },
       });
       uploads.forEach(async (u, index) => {
@@ -104,6 +105,9 @@ export class TasksService {
           options: true,
           submissions: true,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
 
       if (!tasks) throw new NotFoundException();
@@ -113,6 +117,11 @@ export class TasksService {
       console.log(error);
       throw new InternalServerErrorException();
     }
+  }
+  private addDaysToDate(date: Date, days: number) {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + days);
+    return newDate;
   }
 
   async getTaskResult(req: Request): Promise<{

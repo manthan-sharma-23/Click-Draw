@@ -1,6 +1,5 @@
 import {
   Alert,
-  Button,
   CircularProgress,
   LinearProgress,
   Slider,
@@ -12,6 +11,12 @@ import { useEffect, useState } from "react";
 import { SiSolana } from "react-icons/si";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { CreateTaskAtom } from "../../lib/store/atoms/create-task-input.atom";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   app_modal_sol,
   owner_public_key,
@@ -47,8 +52,6 @@ const CreateTask = () => {
     if (selectedFile) {
       setFiles((v) => [selectedFile, ...v]);
     }
-
-    console.log(taskInput);
   };
 
   const SendSolCall = async () => {
@@ -116,6 +119,17 @@ const CreateTask = () => {
       setTxError(String((error as { message: string }).message));
     }
   };
+  const deleteFromFiles = (index: number) => {
+    try {
+      setFiles((prevFiles) => {
+        const newFiles = [...prevFiles];
+        newFiles.splice(index, 1);
+        return newFiles;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="h-full w-full flex flex-col items-start justify-start gap-3 ">
@@ -140,86 +154,112 @@ const CreateTask = () => {
           </Alert>
         )}
       </div>
-      <div className="text-2xl flex justify-between w-full items-center font-poppins font-semibold underline">
+      <div className="text-5xl mb-5 flex justify-between w-full items-center font-poppins font-semibold ">
         <p>Create Task</p>
-        <IoIosInformationCircleOutline className="cursor-pointer text-2xl text-white/55 hover:text-yellow-300" />
+        <IoIosInformationCircleOutline className="cursor-pointer text-2xl text-black/55 hover:text-yellow-600" />
       </div>
-      <div className="w-full flex flex-col mt-5">
-        <TextField
-          disabled={loading}
-          value={taskInput.title}
-          onChange={(e) =>
-            setTaskInput((v) => ({ ...v, title: e.target.value }))
-          }
-          label="Title"
-          placeholder="Enter your title"
-          fullWidth
-        />
-      </div>
-      <div className="w-full flex flex-col my-3">
-        <TextField
-          disabled={loading}
-          value={taskInput.description}
-          onChange={(e) =>
-            setTaskInput((v) => ({ ...v, description: e.target.value }))
-          }
-          label="Description"
-          placeholder="Enter your task's description"
-          fullWidth
-          rows={30}
-          sx={{ height: "4vh" }}
-        />
-      </div>
-      <div className="w-full flex justify-between items-center my-3 ">
-        <TextField
-          disabled={loading}
-          sx={{
-            width: "9rem",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          label="Workers"
-          value={taskInput.worker}
-          className="text-white  font-poppins"
-          onChange={(e) =>
-            setTaskInput((v) => ({ ...v, worker: Number(e.target.value) }))
-          }
-        />
-        <Slider
-          disabled={loading}
-          sx={{ width: "85%" }}
-          min={15}
-          max={75}
-          step={5}
-          value={taskInput.worker}
-          valueLabelDisplay="auto"
-          onChange={(_, value) =>
-            setTaskInput((v) => ({ ...v, worker: Number(value) }))
-          }
-        />
-      </div>
-      <div className="mt-4 h-auto w-full ">
-        <p className="ml-2 text-xl font-medium">Add Image Options :</p>
-        <div className="w-full h-[35vh]  border border-black/20 rounded-md p-3  overflow-x-hidden">
-          <div className="hover:text-white relative h-[10rem] flex flex-wrap items-center justify-center text-3xl w-[20rem] border border-black/60 rounded-md">
-            <input
-              className="opacity-0 h-full w-full absolute cursor-pointer"
-              type="file"
-              onChange={handleFileChange}
+      <div className="w-full h-[80%] flex gap-8">
+        <div className="w-[50%] h-full flex flex-col  items-center justify-start gap-6">
+          <div className="w-full flex flex-col ">
+            <TextField
+              disabled={loading}
+              value={taskInput.title}
+              onChange={(e) =>
+                setTaskInput((v) => ({ ...v, title: e.target.value }))
+              }
+              label="Title"
+              placeholder="Enter your title"
+              fullWidth
             />
-            <IoAdd className="text-4xl text-black/60" />
           </div>
-          {files &&
-            files.map((file, index) => (
-              <div key={index}>
-                <img
-                  className="h-[10rem] w-[20rem] my-1"
-                  src={URL.createObjectURL(file)}
-                  alt={`Image ${index}`}
+          <div className="w-full flex flex-col">
+            <TextField
+              disabled={loading}
+              value={taskInput.description}
+              onChange={(e) =>
+                setTaskInput((v) => ({ ...v, description: e.target.value }))
+              }
+              label="Description"
+              placeholder="Enter your task's description"
+              fullWidth
+              rows={30}
+              sx={{ height: "4vh" }}
+            />
+          </div>
+          <div className="w-full flex gap-6 justify-between items-center  mt-6">
+            <TextField
+              disabled={loading}
+              sx={{
+                width: "9rem",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              label="Workers"
+              value={taskInput.worker}
+              className="text-white  font-poppins"
+              onChange={(e) =>
+                setTaskInput((v) => ({ ...v, worker: Number(e.target.value) }))
+              }
+            />
+            <Slider
+              disabled={loading}
+              sx={{ width: "85%", color: "#101316" }}
+              min={15}
+              max={75}
+              step={5}
+              value={taskInput.worker}
+              valueLabelDisplay="auto"
+              onChange={(_, value) =>
+                setTaskInput((v) => ({ ...v, worker: Number(value) }))
+              }
+            />
+          </div>
+          <p className="w-full mt-4 flex font-poppins text-black/50">
+            i Note: Tasks will automatically expire after a time period of 5
+            days
+          </p>
+        </div>
+        <div className="w-[50%] h-full">
+          <div className="h-full w-full ">
+            <div className="w-full h-full overflow-scroll  border border-black/20 rounded-md p-3  overflow-x-hidden">
+              <div className="hover:text-white relative h-[10rem] flex flex-wrap items-center justify-center text-3xl w-[20rem] border-dotted border border-black/60 rounded-md">
+                <input
+                  className="opacity-0 h-full w-full absolute cursor-pointer "
+                  type="file"
+                  onChange={handleFileChange}
                 />
+                <IoAdd className="text-4xl text-black/60" />
               </div>
-            ))}
+              {files &&
+                files.map((file, index) => (
+                  <div
+                    key={index}
+                    className="my-2"
+                    onClick={() => {
+                      deleteFromFiles(index);
+                    }}
+                  >
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <img
+                            className="h-[10rem] w-[20rem] my-1 cursor-pointer rounded-lg bg-black hover:opacity-90"
+                            src={URL.createObjectURL(file)}
+                            alt={`Image ${index}`}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent style={{ padding: "0" }}>
+                          <p className="h-full w-full bg-black text-white text-[1rem] p-2 m-0">
+                            Click to remove
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -228,23 +268,22 @@ const CreateTask = () => {
           Total Amount: {taskInput.funds} {"(lamports)"}{" "}
           <SiSolana className="text-purple-400" />
         </div>
-        <Button
+        <button
           disabled={loading}
           onClick={() => {
             SendSolCall();
           }}
-          variant="contained"
-          size="large"
+          className="bg-darkblue font-semibold hover:opacity-80 transition-all h-[2.8rem] font-roboto w-[8rem] flex justify-center items-center rounded-lg text-white"
         >
           {loading ? (
-            <CircularProgress size="medium" />
+            <CircularProgress size="medium" color="success"/>
           ) : (
             <div className="flex gap-3 items-center">
-              Pay SOL
+              PAY SOL
               <SiSolana className="text-purple-600" />
             </div>
           )}
-        </Button>
+        </button>
       </div>
     </div>
   );
