@@ -137,7 +137,13 @@ export class TasksService {
       const task = await this.databaseService.task.findUniqueOrThrow({
         where: { id: taskId },
         include: {
-          submissions: true,
+          submissions: {
+            include: {
+              option: true,
+              Worker: true,
+            },
+          },
+          user: true,
           options: true,
         },
       });
@@ -158,9 +164,6 @@ export class TasksService {
 
   async getTaskById(id: number, req: Request) {
     try {
-      const { userId } = req.user;
-      if (!userId) throw new UnauthorizedException();
-
       const task = await this.databaseService.task.findFirstOrThrow({
         where: {
           id,
@@ -168,15 +171,13 @@ export class TasksService {
         include: {
           options: true,
           user: true,
-          submissions: true,
+          submissions: {
+            include: {
+              option: true,
+            },
+          },
         },
       });
-
-      if (task.userId !== userId) {
-        throw new PreconditionFailedException(
-          'You can only view tasks analytics created by you',
-        );
-      }
 
       return task;
     } catch (error) {

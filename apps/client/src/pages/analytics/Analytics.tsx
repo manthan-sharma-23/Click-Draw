@@ -100,6 +100,7 @@ const Analytics = () => {
                 xAxis={[{ data: tasks.map((task) => task.id) }]}
                 series={[
                   {
+                    color: "#60A5FA",
                     data: tasks.map((task) => task.responses),
                   },
                 ]}

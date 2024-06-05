@@ -22,7 +22,7 @@ export interface Task {
   funds: number;
   responses: number;
   responseLimit: number;
-  Submissions: Submission[];
+  submissions: Submission[];
   status: TaskStatus;
   signature: string;
   worker: number;
@@ -57,11 +57,13 @@ export interface Submission {
   workerId: number;
   task: Task;
   taskId: number;
+  createdAt: Date;
 }
 
 export interface OptionStatistics {
   option: Option;
   percentage: number;
+  votes: number;
 }
 
 export interface TaskResult {

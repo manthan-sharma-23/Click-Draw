@@ -9,16 +9,18 @@ export class TaskStatisticsService {
   ) {
     const recordObj = {};
     task.options.forEach((option) => {
-      recordObj[option.id] = { option, percentage: 0 };
+      recordObj[option.id] = { option, percentage: 0, votes: 0 };
     });
 
     task.submissions.forEach((submission) => {
       const record = recordObj[submission.optionId];
-      const percent = record.percentage;
+
+      const votes = record.votes;
 
       recordObj[submission.optionId] = {
         ...record,
-        percentage: ((percent + 1) / task.responses) * 100,
+        percentage: ((votes + 1) / task.responses) * 100,
+        votes: votes + 1,
       };
     });
 

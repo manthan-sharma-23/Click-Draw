@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 const useGetTaskById = () => {
   const [task, setTask] = useState<TaskResult | null>(null);
   const { taskId } = useParams();
+  const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const token = window.localStorage.getItem("token");
 
@@ -14,19 +15,27 @@ const useGetTaskById = () => {
       setLoading(true);
       getTaskById({ taskId: Number(taskId), token })
         .then((data) => {
-          console.log(data)
-          setTask(data);
-          setLoading(false);
+          if (typeof data === "string") {
+            setLoading(false);
+            setTask(null);
+            setErr(data);
+          } else {
+            console.log(data);
+            setTask(data);
+            setLoading(false);
+            setErr(null);
+          }
         })
         .catch((err) => {
           console.log(err);
+          setErr(err);
           setLoading(false);
           setTask(null);
         });
     }
   }, [token]);
 
-  return { loading, task };
+  return { loading, task, error: err };
 };
 
 export default useGetTaskById;

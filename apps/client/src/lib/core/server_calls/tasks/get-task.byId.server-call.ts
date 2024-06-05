@@ -1,6 +1,6 @@
 import { BACKEND_URL } from "@/utils/config/config.app";
 import axios from "axios";
-import {  TaskResult } from "../../types/models";
+import { TaskResult } from "../../types/models";
 
 export const getTaskById = async ({
   taskId,
@@ -10,19 +10,16 @@ export const getTaskById = async ({
   token: string;
 }) => {
   try {
-    const result = await axios.get(
-      `${BACKEND_URL}/v1/tasks/result/${taskId}`,
-      {
-        headers: {
-          authorization: "Bearer " + token,
-        },
-      }
-    );
+    const result = await axios.get(`${BACKEND_URL}/v1/tasks/result/${taskId}`, {
+      headers: {
+        authorization: "Bearer " + token,
+      },
+    });
 
     const data = result.data as TaskResult;
 
     return data;
   } catch (error) {
-    return null;
+    return error as string;
   }
 };

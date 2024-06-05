@@ -35,6 +35,7 @@ const Tasks = () => {
       getNextTask({ token })
         .then((data) => {
           if (data) {
+            console.log(data);
             setNextTask(data);
             navigate(`/task/${data.id}`);
           } else {
