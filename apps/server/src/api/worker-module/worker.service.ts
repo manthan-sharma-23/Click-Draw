@@ -43,10 +43,36 @@ export class WorkerService {
 
       console.log('Result ', result);
 
-      const worker = await this.databaseService.worker.upsert({
-        where: { address: publicKey },
-        update: { address: publicKey },
-        create: { address: publicKey },
+      const worker = await this.databaseService.$transaction(async (tx) => {
+        let worker = await tx.worker.findUnique({
+          where: {
+            address: publicKey,
+          },
+          include: {
+            wallet: true,
+          },
+        });
+
+        if (!worker) {
+          const createWorker = await tx.worker.create({
+            data: {
+              address: publicKey,
+            },
+          });
+
+          const wallet = await tx.wallet.create({
+            data: {
+              workerId: worker.id,
+            },
+          });
+
+          worker = {
+            ...createWorker,
+            wallet: wallet,
+          };
+        }
+
+        return worker;
       });
 
       if (!worker)
@@ -76,6 +102,9 @@ export class WorkerService {
         where: {
           id: workerId,
           address: publicKey,
+        },
+        include: {
+          wallet: true,
         },
       });
 

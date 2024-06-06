@@ -87,8 +87,8 @@ const Graph = ({ result }: { result: OptionStatistics[] }) => {
         xAxis={[{ data: result.map((res) => res.option.serial_no) }]}
         series={[
           {
-            area:true,
-            color:"#003362",
+            area: true,
+            color: "#003362",
             curve: "catmullRom",
             data: result.map((res) => res.percentage),
           },
@@ -117,10 +117,7 @@ const Poll = ({ result }: { result: OptionStatistics[] }) => {
         </TableHeader>
         <TableBody>
           {result.map((result, index) => (
-            <TableRow
-              key={index}
-              className="relative z-10 overflow-x-hidden"
-            >
+            <TableRow key={index} className="relative z-10 overflow-x-hidden">
               <div
                 className={cn("absolute h-full -z-10 bg-blue-200/60 ")}
                 style={{
@@ -173,7 +170,7 @@ const SubmissionTable = ({ task }: { task: Task }) => {
               <TableCell>
                 <Avatar src={submission.option.image_url} />
               </TableCell>
-              <TableCell>10000</TableCell>
+              <TableCell>{submission.amount_credited_to_worker}</TableCell>
               <TableCell className="text-right">
                 {moment(submission.createdAt).format("LL")}
               </TableCell>

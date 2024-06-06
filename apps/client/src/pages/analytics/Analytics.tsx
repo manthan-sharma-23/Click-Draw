@@ -2,19 +2,17 @@ import { useGetCreatedTasks } from "../../lib/hooks/useGetCreatedTasks";
 import { LineChart } from "@mui/x-charts/LineChart";
 import "swiper/swiper-bundle.css";
 import "../../lib/styles/scroll.css";
-import { useRecoilValue } from "recoil";
-import { UserAtom } from "@/lib/store/atoms/user.atom";
 import { CircularProgress } from "@mui/material";
 import { useGetLastTaskByUser } from "@/lib/hooks/useGetLastTaskByUser";
 import { PieChart } from "@mui/x-charts/PieChart";
 import AnalyticsTable from "./AnalyticsTable";
 import { useNavigate } from "react-router-dom";
-import { BACKEND_URL } from "@/utils/config/config.app";
+import useGetUser from "@/lib/hooks/useGetUser";
 
 const Analytics = () => {
   const { loading, tasks } = useGetCreatedTasks();
   const { task: lastTask, loading: lastTaskLoading } = useGetLastTaskByUser();
-  const user = useRecoilValue(UserAtom);
+  const { user } = useGetUser();
   const navigate = useNavigate();
 
   if (loading) {

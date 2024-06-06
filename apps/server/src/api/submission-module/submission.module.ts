@@ -4,9 +4,16 @@ import { SubmissionController } from './submission.controller';
 import { DatabaseService } from 'src/engine/database/database.service';
 import { AuthGuard } from 'src/engine/core/guards/Authorization.guard';
 import { JwtService } from 'src/engine/core/services/Jwt.service';
+import { SolanaService } from 'src/engine/core/services/Solana.service';
 
 @Module({
-  providers: [SubmissionService, DatabaseService, AuthGuard, JwtService],
+  providers: [
+    SubmissionService,
+    SolanaService,
+    DatabaseService,
+    AuthGuard,
+    JwtService,
+  ],
   controllers: [SubmissionController],
 })
 export class SubmissionModule {}

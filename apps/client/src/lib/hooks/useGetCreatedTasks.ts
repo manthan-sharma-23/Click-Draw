@@ -1,7 +1,6 @@
 import { useRecoilState } from "recoil";
 import { useEffect, useState } from "react";
 import { getCreatedTasks } from "../core/server_calls/tasks/get-tasks-created.server-call";
-
 import { CreatedTasksAtom } from "../store/atoms/created-tasks.atom";
 
 export const useGetCreatedTasks = () => {
@@ -14,15 +13,15 @@ export const useGetCreatedTasks = () => {
       setLoading(true);
       getCreatedTasks({ token })
         .then((data) => {
+          setLoading(false);
           if (data) {
             setTasks(data);
-            setLoading(false);
           }
         })
         .catch((err) => {
           console.log(err);
-          setTasks([]);
           setLoading(false);
+          setTasks([]);
         });
     }
   }, [token]);

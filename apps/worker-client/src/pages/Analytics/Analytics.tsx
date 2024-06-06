@@ -1,11 +1,11 @@
-import React from 'react'
+import { WorkerAtom } from "@/lib/core/store/atom/worker.atom";
+import React from "react";
+import { useRecoilValue } from "recoil";
 
 const Analytics = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  const worker = useRecoilValue(WorkerAtom);
 
-export default Analytics
+  return <div>{JSON.stringify(worker)}</div>;
+};
+
+export default Analytics;

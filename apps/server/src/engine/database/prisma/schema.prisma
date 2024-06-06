@@ -26,6 +26,17 @@ enum TaskStatus {
   CLOSED
 }
 
+enum TransactionStatus {
+  PROCESSING
+  REVOKED
+  SUCCESS
+}
+
+enum TransactionType {
+  WITHDRAW
+  DEPOSIT
+}
+
 model Task {
   id            Int          @id @default(autoincrement())
   title         String
@@ -61,22 +72,50 @@ model Worker {
   name        String?
   address     String       @unique
   submissions Submission[]
-
-  currentAmount Int @default(0)
-  lockedAmount  Int @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  wallet      Wallet?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  walletId    String?
 }
 
 model Submission {
-  id       String @id @default(uuid())
-  option   Option @relation(fields: [optionId], references: [id])
-  optionId String
-  Worker   Worker @relation(fields: [workerId], references: [id])
-  workerId Int
-  task     Task   @relation(fields: [taskId], references: [id])
-  taskId   Int
+  id                        String   @id @default(uuid())
+  option                    Option   @relation(fields: [optionId], references: [id])
+  optionId                  String
+  Worker                    Worker   @relation(fields: [workerId], references: [id])
+  workerId                  Int
+  task                      Task     @relation(fields: [taskId], references: [id])
+  taskId                    Int
+  amount_credited_to_worker Int      @default(50000)
+  createdAt                 DateTime @default(now())
+}
 
-  createdAt DateTime @default(now())
+model Wallet {
+  id       Int     @id @default(autoincrement())
+  worker   Worker? @relation(fields: [workerId], references: [id])
+  workerId Int     @unique
+
+  currentAmount Int           @default(0)
+  lockedAmount  Int           @default(0)
+  transactions  Transaction[]
+
+  @@unique([id, workerId])
+}
+
+model Transaction {
+  id          String  @id @default(uuid())
+  address     String?
+  url         String?
+  description String?
+
+  amount   Int
+  Wallet   Wallet @relation(fields: [walletId], references: [id])
+  walletId Int
+
+  from String?
+  to   String?
+
+  status           TransactionStatus @default(PROCESSING)
+  transaction_type TransactionType
+  createdAt        DateTime          @default(now())
 }

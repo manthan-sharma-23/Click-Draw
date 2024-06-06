@@ -8,6 +8,7 @@ export class SolanaService {
     per_image_option: 1_00_000,
     aditional_worker_fee: 50_000,
     commision_on_each_worker: 0.2,
+    worker_work_fee: 50_000,
   };
 
   public connection;

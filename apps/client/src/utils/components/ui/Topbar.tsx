@@ -11,12 +11,22 @@ import { Alert } from "@mui/material";
 import { PublicKey } from "@solana/web3.js";
 import Avvvatars from "avvvatars-react";
 import { SideBarOptions } from "@/utils/config/sideBar.config";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { app_navigation_routes } from "@/utils/config/links";
 
 const Topbar = () => {
   const { publicKey, signMessage } = useWallet();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     signAndSend();
@@ -71,14 +81,38 @@ const Topbar = () => {
           />
         ) : (
           <div className="flex gap-4 items-center ">
-            <WalletDisconnectButton
-              onClick={() => {
-                window.localStorage.removeItem("token");
-                window.location.reload();
-              }}
-              style={{ backgroundColor: "black", height: "4.5vh" }}
-            />
-            <ProfileSection publicKey={publicKey} />
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <ProfileSection publicKey={publicKey} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link to="/profile">Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <div
+                    onClick={() => {
+                      window.localStorage.clear();
+                      window.location.assign(app_navigation_routes.WORKER_URL);
+                    }}
+                  >
+                    Worker Pannel
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <WalletDisconnectButton
+                    onClick={() => {
+                      window.localStorage.removeItem("token");
+                      window.location.reload();
+                    }}
+                    style={{ backgroundColor: "black", height: "4.5vh" }}
+                  />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         )}
       </div>

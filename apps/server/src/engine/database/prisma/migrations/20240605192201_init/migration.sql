@@ -6,6 +6,7 @@ CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "name" TEXT,
     "address" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -23,7 +24,8 @@ CREATE TABLE "Task" (
     "signature" TEXT NOT NULL,
     "worker" INTEGER NOT NULL DEFAULT 15,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "endAt" TIMESTAMP(3),
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
 );
@@ -43,8 +45,11 @@ CREATE TABLE "Worker" (
     "id" SERIAL NOT NULL,
     "name" TEXT,
     "address" TEXT NOT NULL,
+    "currentAmount" INTEGER NOT NULL DEFAULT 0,
+    "lockedAmount" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "walletId" TEXT NOT NULL,
 
     CONSTRAINT "Worker_pkey" PRIMARY KEY ("id")
 );
@@ -60,6 +65,14 @@ CREATE TABLE "Submission" (
     CONSTRAINT "Submission_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Wallet" (
+    "id" SERIAL NOT NULL,
+    "workerId" INTEGER NOT NULL,
+
+    CONSTRAINT "Wallet_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_address_key" ON "User"("address");
 
@@ -68,6 +81,9 @@ CREATE UNIQUE INDEX "Task_userId_id_key" ON "Task"("userId", "id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Worker_address_key" ON "Worker"("address");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Wallet_workerId_key" ON "Wallet"("workerId");
 
 -- AddForeignKey
 ALTER TABLE "Task" ADD CONSTRAINT "Task_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -83,3 +99,6 @@ ALTER TABLE "Submission" ADD CONSTRAINT "Submission_workerId_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "Submission" ADD CONSTRAINT "Submission_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Wallet" ADD CONSTRAINT "Wallet_workerId_fkey" FOREIGN KEY ("workerId") REFERENCES "Worker"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
