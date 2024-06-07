@@ -152,6 +152,7 @@ export class SubmissionService {
             },
             include: {
               Worker: true,
+              option: true,
               task: {
                 include: {
                   user: true,
@@ -207,17 +208,17 @@ export class SubmissionService {
     }
   }
 
-  async getSubmissinById(req: Request) {
+  async getSubmissionById(submissionId: string) {
     try {
-      const data = get_submission_by_id_input.parse(req.body);
-
       const submission =
         await this.databaseService.submission.findUniqueOrThrow({
           where: {
-            id: data.submissionId,
+            id: submissionId,
           },
           include: {
             Worker: true,
+            option: true,
+            transaction: true,
             task: {
               include: {
                 user: true,

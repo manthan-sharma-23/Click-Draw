@@ -6,6 +6,9 @@ import Home from "./pages/home/Home";
 import Analytics from "./pages/Analytics/Analytics";
 import Tasks from "./pages/Tasks/Tasks";
 import TaskById from "./pages/Tasks/TaskById";
+import SubmissionById from "@/pages/submission/[submissionId]/SubmissionById";
+import Wallet from "./pages/profile/Profile";
+
 const App = () => {
   return (
     <div className="h-screen w-screen">
@@ -17,8 +20,12 @@ const App = () => {
                 <Route index element={<Home />} />
                 <Route path="/tasks" element={<Tasks />} />
                 <Route path="/analytics" element={<Analytics />} />
-                <Route path="/profile" element={<Analytics />} />
+                <Route path="/wallet" element={<Wallet />} />
                 <Route path="/task/:taskId" element={<TaskById />} />
+                <Route
+                  path="/submission/:submissionId"
+                  element={<SubmissionById />}
+                />
               </Route>
             </Routes>
           </BrowserRouter>

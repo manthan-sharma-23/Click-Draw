@@ -51,11 +51,12 @@ const SubmissionCountMeterUI = ({ value }: { value: number }) => {
       value={value}
       startAngle={-110}
       endAngle={110}
+      text={`${value}/10`}
       valueMax={10}
       cornerRadius={"50%"}
       sx={(theme) => ({
         [`& .${gaugeClasses.valueText}`]: {
-          fontSize: 30,
+          fontSize: 25,
         },
         [`& .${gaugeClasses.valueArc}`]: {
           fill: "#3E63DD",

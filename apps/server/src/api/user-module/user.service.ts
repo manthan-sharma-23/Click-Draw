@@ -61,17 +61,10 @@ export class UserService {
             },
           });
 
-          user = await tx.user.create({
-            data: { address: worker.address, workerId: worker.id },
-            include: {
-              Worker: true,
-            },
-          });
-
           if (!worker) {
             worker = await tx.worker.create({
               data: {
-                address: user.address,
+                address: publicKey,
               },
             });
 
@@ -81,6 +74,13 @@ export class UserService {
               },
             });
           }
+          
+          user = await tx.user.create({
+            data: { address: worker.address, workerId: worker.id },
+            include: {
+              Worker: true,
+            },
+          });
         }
 
         return user;

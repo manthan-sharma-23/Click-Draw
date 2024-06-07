@@ -10,7 +10,7 @@ export const SubmissionByWorkerSelector = selector({
 
     return {
       submissions_today: submissions?.submissionCountForDay,
-      total_submissions: submissions?.submissionCountForDay,
+      total_submissions: submissions?.submissionTotalCount,
       wallet_balance: wallet?.currentAmount,
     };
   },

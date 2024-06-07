@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { SubmissionService } from './submission.service';
 import { AuthGuard } from 'src/engine/core/guards/Authorization.guard';
 import { Request } from 'express';
@@ -17,5 +17,11 @@ export class SubmissionController {
   @UseGuards(AuthGuard)
   async getWorkerSubmissions(@Req() req: Request) {
     return await this.submissionService.getWorkerSubmissions(req);
+  }
+
+  @Get('/:submissionId')
+  @UseGuards(AuthGuard)
+  async getSubmissionById(@Param('submissionId') submissionId: string) {
+    return await this.submissionService.getSubmissionById(submissionId);
   }
 }

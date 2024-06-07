@@ -46,14 +46,14 @@ const Analytics = () => {
             >
               <div className="cursor-pointer w-2/3 h-full flex flex-col justify-between items-center">
                 <p className="w-full text-4xl">Last Poll Results</p>
-                <div className="h-auto w-full text-lg flex items-center justify-center mt-4">
-                  <div className="w-1/2 h-full flex flex-col gap-1 text-white/60">
+                <div className="h-auto w-full text-lg flex items-center justify-around mt-4 ">
+                  <div className=" w-1/2 h-full flex flex-col gap-1 text-white/60">
                     <p>Responses : {lastTask.task.responses}</p>
                     <p>Workers : {lastTask.task.worker}</p>
                     <p>Funds : {lastTask.task.funds}</p>
-                    <p>Options : {lastTask.task.options.length}</p>
+                    <p>Options : {lastTask.task.options?.length}</p>
                   </div>
-                  <div className="w-1/2 h-full text-lg text-white/65 flex flex-col-reverse gap-1 ">
+                  <div className="w-1/2 h-full text-lg text-white/65 flex flex-col gap-1  flex-wrap">
                     {lastTask.result.map((option) => (
                       <p>
                         Option {option.option.serial_no} :{" "}

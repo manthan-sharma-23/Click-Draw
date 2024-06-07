@@ -77,8 +77,8 @@ export interface Submission {
   taskId: number;
   amount_credited_to_worker: number;
   createdAt: Date;
-  transaction?: Transaction | null;
-  transactionId?: string | null;
+  transaction?: Transaction;
+  transactionId?: string;
 }
 
 export interface Wallet {
@@ -118,4 +118,10 @@ export interface OptionStatistics {
 export interface TaskResult {
   task: Task;
   result: OptionStatistics[];
+}
+
+export interface SubmissionsByWorker {
+  submissions: Submission[];
+  submissionCountForDay: number;
+  submissionTotalCount: number;
 }

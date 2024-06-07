@@ -44,7 +44,7 @@ const AnalyticsTable = ({ tasks }: { tasks: Task[] }) => {
               <TableCell>{task.id}</TableCell>
               <TableCell>{task.title}</TableCell>
               <TableCell>{task.status}</TableCell>
-              <TableCell>{task.options.length}</TableCell>
+              <TableCell>{task.options?.length}</TableCell>
               <TableCell>{task.worker}</TableCell>
               <TableCell>{task.responses}</TableCell>
               <TableCell>{task.funds}</TableCell>
