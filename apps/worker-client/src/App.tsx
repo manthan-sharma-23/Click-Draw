@@ -7,7 +7,7 @@ import Analytics from "./pages/Analytics/Analytics";
 import Tasks from "./pages/Tasks/Tasks";
 import TaskById from "./pages/Tasks/TaskById";
 import SubmissionById from "@/pages/submission/[submissionId]/SubmissionById";
-import Wallet from "./pages/profile/Profile";
+import Wallet from "./pages/profile/WorkerWallet";
 
 const App = () => {
   return (
