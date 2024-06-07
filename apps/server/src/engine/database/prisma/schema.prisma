@@ -19,6 +19,8 @@ model User {
   address   String   @unique
   tasks     Task[]
   createdAt DateTime @default(now())
+  Worker    Worker   @relation(fields: [workerId], references: [id])
+  workerId  Int      @unique
 }
 
 enum TaskStatus {
@@ -73,21 +75,25 @@ model Worker {
   address     String       @unique
   submissions Submission[]
   wallet      Wallet?
+  user        User?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   walletId    String?
+  userId      Int?
 }
 
 model Submission {
-  id                        String   @id @default(uuid())
-  option                    Option   @relation(fields: [optionId], references: [id])
+  id                        String       @id @default(uuid())
+  option                    Option       @relation(fields: [optionId], references: [id])
   optionId                  String
-  Worker                    Worker   @relation(fields: [workerId], references: [id])
+  Worker                    Worker       @relation(fields: [workerId], references: [id])
   workerId                  Int
-  task                      Task     @relation(fields: [taskId], references: [id])
+  task                      Task         @relation(fields: [taskId], references: [id])
   taskId                    Int
-  amount_credited_to_worker Int      @default(50000)
-  createdAt                 DateTime @default(now())
+  amount_credited_to_worker Int          @default(50000)
+  createdAt                 DateTime     @default(now())
+  transaction               Transaction? @relation(fields: [transactionId], references: [id])
+  transactionId             String       @unique
 }
 
 model Wallet {
@@ -118,4 +124,6 @@ model Transaction {
   status           TransactionStatus @default(PROCESSING)
   transaction_type TransactionType
   createdAt        DateTime          @default(now())
+
+  Submission Submission?
 }

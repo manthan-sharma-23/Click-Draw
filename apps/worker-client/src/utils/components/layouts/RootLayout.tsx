@@ -2,9 +2,11 @@ import Topbar from "../sections/Topbar";
 import { Outlet } from "react-router-dom";
 import { Separator } from "../ui/separator";
 import { useGetWorker } from "@/lib/core/hooks/useGetWorker";
+import useGetSubmissions from "@/lib/core/hooks/useGetSubmissions";
 
 const RootLayout = () => {
   useGetWorker();
+  useGetSubmissions();
   return (
     <div className="h-full w-full flex flex-col items-center justify-center">
       <div className="h-[5.5vh] w-full ">

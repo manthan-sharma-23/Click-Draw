@@ -24,7 +24,7 @@ import {
 import { app_navigation_routes } from "@/utils/config/links";
 
 const Topbar = () => {
-  const { publicKey, signMessage } = useWallet();
+  const { publicKey, signMessage, connected } = useWallet();
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -33,23 +33,25 @@ const Topbar = () => {
   }, [publicKey]);
 
   const signAndSend = async () => {
-    if (window.localStorage.getItem("token")) return;
-    const [signString, encodedSign] =
-      generate_functional_string_for_signature();
+    if (connected) {
+      if (window.localStorage.getItem("token")) return;
+      const [signString, encodedSign] =
+        generate_functional_string_for_signature();
 
-    const signature = await signMessage?.(encodedSign);
+      const signature = await signMessage?.(encodedSign);
 
-    const result = await axios.post(`${BACKEND_URL}/users/signin`, {
-      publicKey: publicKey?.toString(),
-      signature,
-      signString,
-    });
-    const token = result.data.token;
-    if (token) {
-      window.localStorage.setItem("token", token);
-      <Alert severity="success">Authorized Successfully</Alert>;
-    } else {
-      <Alert severity="error">{`ERROR : ${result.data}`}</Alert>;
+      const result = await axios.post(`${BACKEND_URL}/users/signin`, {
+        publicKey: publicKey?.toString(),
+        signature,
+        signString,
+      });
+      const token = result.data.token;
+      if (token) {
+        window.localStorage.setItem("token", token);
+        <Alert severity="success">Authorized Successfully</Alert>;
+      } else {
+        <Alert severity="error">{`ERROR : ${result.data}`}</Alert>;
+      }
     }
   };
 

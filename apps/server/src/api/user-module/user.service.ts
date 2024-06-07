@@ -25,6 +25,8 @@ export class UserService {
     try {
       const { publicKey, signString, signature } = request.body;
 
+      console.log('INformations', publicKey, signString, signature);
+
       if (!publicKey || typeof publicKey !== 'string') {
         throw new ConflictException('Public key is missing or not a string');
       }
@@ -41,10 +43,47 @@ export class UserService {
         throw new UnauthorizedException('Signature verification failed');
       }
 
-      const user = await this.databaseService.user.upsert({
-        where: { address: publicKey },
-        update: { address: publicKey },
-        create: { address: publicKey },
+      // this transaction creates user pannel and wallet for user
+      const user = await this.databaseService.$transaction(async (tx) => {
+        let user = await tx.user.findUnique({
+          where: {
+            address: publicKey,
+          },
+          include: {
+            Worker: true,
+          },
+        });
+
+        if (!user) {
+          let worker = await tx.worker.findUnique({
+            where: {
+              address: publicKey,
+            },
+          });
+
+          user = await tx.user.create({
+            data: { address: worker.address, workerId: worker.id },
+            include: {
+              Worker: true,
+            },
+          });
+
+          if (!worker) {
+            worker = await tx.worker.create({
+              data: {
+                address: user.address,
+              },
+            });
+
+            await tx.wallet.create({
+              data: {
+                workerId: worker.id,
+              },
+            });
+          }
+        }
+
+        return user;
       });
 
       if (!user) {
@@ -72,6 +111,11 @@ export class UserService {
         },
         include: {
           tasks: true,
+          Worker: {
+            include: {
+              wallet: true,
+            },
+          },
         },
       });
 

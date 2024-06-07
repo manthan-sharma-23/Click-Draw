@@ -1,22 +1,41 @@
 import { useGetWorkerTasks } from "@/lib/core/hooks/useGetWorkerTasks";
 import { getNextTask } from "@/lib/core/server_calls/worker/get.next-task.worker";
 import { NextTaskAtom } from "@/lib/core/store/atom/next.task.atom";
-import { Alert, Button, CircularProgress, Typography } from "@mui/material";
+import { SubmissionByWorkerSelector } from "@/lib/core/store/selectors/submissionCountSelector";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 import { CornerDownRight } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 
 const Tasks = () => {
   const { error, tasks, loading } = useGetWorkerTasks();
   const navigate = useNavigate();
   const [nextTask, setNextTask] = useRecoilState(NextTaskAtom);
   const reset_next_task = useResetRecoilState(NextTaskAtom);
+  const submissions = useRecoilValue(SubmissionByWorkerSelector);
 
+  if (submissions.submissions_today! >= 10) {
+    return (
+      <div>
+        <Alert color="warning" severity="warning">
+          <AlertTitle>LIMIT EXCEEDED</AlertTitle>
+          Submissions limit exceeded for today come back next day :)
+        </Alert>
+      </div>
+    );
+  }
   if (error) {
     return (
-      <Alert variant="filled" severity="error">
-        {error + "Hey"}
+      <Alert color="error" severity="error">
+        <AlertTitle>ERROR</AlertTitle>
+        {error}
       </Alert>
     );
   }
@@ -52,7 +71,8 @@ const Tasks = () => {
     <div className="h-full w-full flex flex-col pt-4 justify-center items-start overflow-hidden">
       {tasks.length <= 0 && (
         <Alert severity="success" color="warning" sx={{ width: "100%" }}>
-          Hey there please come back later no tasks for you yet
+          <AlertTitle>NO TASKS PENDING</AlertTitle>
+          Hey there please come back later, no tasks for you yet :)
         </Alert>
       )}
       <div className="w-full h-full flex flex-col gap-2 justify-center items-center">

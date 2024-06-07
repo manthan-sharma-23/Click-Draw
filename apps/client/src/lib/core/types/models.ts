@@ -1,4 +1,4 @@
-// TypeScript interfaces for Prisma schema models
+// Generated TypeScript interfaces based on the Prisma schema
 
 export enum TaskStatus {
   ACTIVE = "ACTIVE",
@@ -18,85 +18,95 @@ export enum TransactionType {
 
 export interface User {
   id: number;
-  name?: string;
+  name?: string | null;
   address: string;
-  tasks: Task[];
+  tasks?: Task[];
   createdAt: Date;
+  Worker: Worker;
+  workerId: number;
 }
 
 export interface Task {
   id: number;
   title: string;
-  description?: string;
-  options: Option[];
+  description?: string | null;
+  options?: Option[];
   user: User;
   userId: number;
   funds: number;
   responses: number;
   responseLimit: number;
-  submissions: Submission[];
+  submissions?: Submission[];
   status: TaskStatus;
   signature: string;
   worker: number;
   createdAt: Date;
   updatedAt: Date;
-  endAt?: Date;
+  endAt?: Date | null;
 }
 
 export interface Option {
   id: string;
-  serial_no?: number;
+  serial_no?: number | null;
   image_url: string;
   tasks: Task;
   taskId: number;
-  submissions: Submission[];
+  submissions?: Submission[];
 }
 
 export interface Worker {
   id: number;
-  name?: string;
+  name?: string | null;
   address: string;
-  submissions: Submission[];
-  wallet?: Wallet;
+  submissions?: Submission[];
+  wallet?: Wallet | null;
+  user?: User | null;
   createdAt: Date;
   updatedAt: Date;
-  walletId?: string;
+  walletId?: string | null;
+  userId?: number | null;
 }
 
 export interface Submission {
   id: string;
   option: Option;
   optionId: string;
-  worker: Worker;
+  Worker: Worker;
   workerId: number;
   task: Task;
   taskId: number;
   amount_credited_to_worker: number;
   createdAt: Date;
+  transaction?: Transaction | null;
+  transactionId?: string | null;
 }
 
 export interface Wallet {
   id: number;
-  worker?: Worker;
+  worker?: Worker | null;
   workerId: number;
   currentAmount: number;
   lockedAmount: number;
-  transactions: Transaction[];
+  transactions?: Transaction[];
+
+  // This unique constraint might not be required in TypeScript interface
+  // @@unique([id, workerId])
 }
 
 export interface Transaction {
   id: string;
-  address?: string;
-  url?: string;
-  description?: string;
+  address?: string | null;
+  url?: string | null;
+  description?: string | null;
   amount: number;
-  wallet: Wallet;
+  Wallet: Wallet;
   walletId: number;
-  from?: string;
-  to?: string;
+  from?: string | null;
+  to?: string | null;
   status: TransactionStatus;
   transaction_type: TransactionType;
   createdAt: Date;
+  Submission?: Submission | null;
 }
 
 export interface OptionStatistics {

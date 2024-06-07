@@ -30,6 +30,25 @@ export class SubmissionService {
         throw new NotAcceptableException('Insufficient Information');
 
       const submission = await this.databaseService.$transaction(async (tx) => {
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const submissionsCount = await tx.submission.count({
+          where: {
+            workerId,
+            createdAt: {
+              gte: startOfDay,
+              lte: endOfDay,
+            },
+          },
+        });
+
+        if (submissionsCount >= 10) {
+          throw new ConflictException('Submission limit reached for today');
+        }
+
         const task = await tx.task.findUniqueOrThrow({
           where: {
             id: taskId,
@@ -38,6 +57,7 @@ export class SubmissionService {
             submissions: true,
           },
         });
+
         task.submissions.forEach((submit) => {
           if (submit.workerId === workerId) {
             throw new ConflictException(
@@ -45,11 +65,40 @@ export class SubmissionService {
             );
           }
         });
+
+        const worker_pay = this.solanaService.coin_modal.worker_work_fee;
+        const commission_pay_to_app = 0.15 * worker_pay;
+        const add_to_worker_wallet = worker_pay - commission_pay_to_app;
+
+        const wallet = await tx.wallet.update({
+          where: {
+            workerId,
+          },
+          data: {
+            currentAmount: {
+              increment: add_to_worker_wallet,
+            },
+          },
+        });
+
+        const tx_description = `${add_to_worker_wallet} lamports credited for poll submission`;
+
+        const createTransaction = await tx.transaction.create({
+          data: {
+            amount: add_to_worker_wallet,
+            walletId: wallet.id,
+            status: 'SUCCESS',
+            transaction_type: 'DEPOSIT',
+            description: tx_description,
+          },
+        });
+
         const submission = await tx.submission.create({
           data: {
             workerId,
             taskId: task.id,
             optionId,
+            transactionId: createTransaction.id,
           },
           include: {
             Worker: true,
@@ -74,33 +123,6 @@ export class SubmissionService {
           },
         });
 
-        const worker_pay = submission.amount_credited_to_worker;
-        const comission_pay_to_app = 0.15 * worker_pay;
-        const add_to_worker_wallet = worker_pay - comission_pay_to_app;
-
-        const wallet = await tx.wallet.update({
-          where: {
-            workerId,
-          },
-          data: {
-            currentAmount: {
-              increment: add_to_worker_wallet,
-            },
-          },
-        });
-
-        const tx_description = `${add_to_worker_wallet} lamports credited for poll submission`;
-
-        await tx.transaction.create({
-          data: {
-            amount: add_to_worker_wallet,
-            walletId: wallet.id,
-            status: 'SUCCESS',
-            transaction_type: 'DEPOSIT',
-            description: tx_description,
-          },
-        });
-
         return submission;
       });
 
@@ -120,20 +142,63 @@ export class SubmissionService {
           'Not a worker, please Signin / Authorize',
         );
 
-      const submissions = await this.databaseService.submission.findMany({
-        where: {
-          workerId,
-        },
-        include: {
-          Worker: true,
-          task: {
-            include: {
-              user: true,
-              options: true,
+      const submissions = await this.databaseService.$transaction(
+        async (tx) => {
+          const startOfDay = new Date();
+          startOfDay.setHours(0, 0, 0, 0);
+          const submissions = await tx.submission.findMany({
+            where: {
+              workerId,
             },
-          },
+            include: {
+              Worker: true,
+              task: {
+                include: {
+                  user: true,
+                  options: true,
+                },
+              },
+              transaction: true,
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+          });
+
+          const submissionCountForToday = await tx.submission.count({
+            where: {
+              AND: [
+                {
+                  workerId,
+                },
+                {
+                  createdAt: {
+                    gte: startOfDay,
+                  },
+                },
+              ],
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+          });
+          const submissionCountByWorker = await tx.submission.count({
+            where: {
+              AND: [
+                {
+                  workerId,
+                },
+              ],
+            },
+          });
+
+          return {
+            submissions,
+            submissionCountForDay: submissionCountForToday,
+            submissionCountAllTime: submissionCountByWorker,
+          };
         },
-      });
+      );
 
       return submissions || [];
     } catch (error) {

@@ -33,7 +33,7 @@ const useGetTaskById = () => {
           setTask(null);
         });
     }
-  }, [token]);
+  }, [token, taskId]);
 
   return { loading, task, error: err };
 };
