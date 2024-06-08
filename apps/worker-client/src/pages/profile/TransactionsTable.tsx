@@ -11,6 +11,7 @@ import {
 } from "@/utils/components/ui/table";
 import TransactionIcon from "@/utils/components/utils/transaction/getTransactionIcon";
 import moment from "moment";
+import { cn } from "@/utils";
 
 const TransactionsTable = () => {
   const { err, transactions, loading } = useGetTransactions();
@@ -38,6 +39,7 @@ const TransactionsTable = () => {
           <TableRow>
             <TableHead className="w-[100px]">Sno.</TableHead>
             <TableHead>Description</TableHead>
+            <TableHead>Transaction Status</TableHead>
             <TableHead>Transaction Type</TableHead>
             <TableHead>From</TableHead>
             <TableHead>To</TableHead>
@@ -50,6 +52,18 @@ const TransactionsTable = () => {
             <TableRow>
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>{transaction.description}</TableCell>
+              <TableCell
+                className={cn(
+                  "font-medium",
+                  transaction.status === "SUCCESS"
+                    ? "text-green-500"
+                    : transaction.status === "PROCESSING"
+                      ? "text-yellow-600"
+                      : "text-red-500"
+                )}
+              >
+                {transaction.status}
+              </TableCell>
               <TableCell className="font-medium">
                 {transaction.transaction_type}
               </TableCell>

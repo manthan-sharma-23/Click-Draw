@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { AuthGuard } from 'src/engine/core/guards/Authorization.guard';
 import { WalletService } from './wallet.service';
@@ -11,5 +11,11 @@ export class WalletController {
   @UseGuards(AuthGuard)
   async getWalletTransactions(@Req() req: Request) {
     return await this.walletService.getWalletTransactions(req);
+  }
+
+  @Put('pay-out')
+  @UseGuards(AuthGuard)
+  async PayoutWallet(@Req() req: Request) {
+    return await this.walletService.PayoutWallet(req);
   }
 }

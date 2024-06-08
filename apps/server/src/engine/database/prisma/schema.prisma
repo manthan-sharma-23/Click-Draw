@@ -110,7 +110,7 @@ model Wallet {
 
 model Transaction {
   id          String  @id @default(uuid())
-  address     String?
+  signature     String?
   url         String?
   description String?
 

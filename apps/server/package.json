@@ -31,6 +31,7 @@
     "@solana/web3.js": "^1.91.8",
     "axios": "^1.7.2",
     "body-parser": "^1.20.2",
+    "bs58": "^5.0.0",
     "cors": "^2.8.5",
     "jsonwebtoken": "^9.0.2",
     "node-cron": "^3.0.3",

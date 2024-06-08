@@ -27,10 +27,6 @@ import { AiTwotoneWallet } from "react-icons/ai";
 
 const navOptions = [
   {
-    name: "Home",
-    link: "/",
-  },
-  {
     name: "Tasks",
     link: "/tasks",
   },
@@ -52,6 +48,7 @@ const Topbar = () => {
     generate_functional_string_for_signature();
   const setTasks = useSetRecoilState(TasksAtom);
   const user = useRecoilValue(WorkerAtom);
+  const navigate = useNavigate();
 
   useEffect(() => {
     signAndSend();
@@ -83,7 +80,10 @@ const Topbar = () => {
   return (
     <div className="h-full w-full p-2 px-[10%] flex justify-between items-center shadow-md">
       <div className=" flex items-center h-full gap-2 w-auto">
-        <p className="mr-[5rem] h-full flex items-center font-mono tracking-tighter cursor-pointer font-semibold text-xl ">
+        <p
+          onClick={() => navigate("/")}
+          className="mr-[3rem] h-full flex items-center font-mono tracking-tighter cursor-pointer font-semibold text-xl "
+        >
           /= ClickDraw
         </p>
         <div className="flex items-center h-full w-auto gap-10 text-black/55 font-poppins">
