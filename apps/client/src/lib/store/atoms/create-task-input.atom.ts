@@ -6,9 +6,10 @@ export interface CreateTaskInput {
   description: string;
   worker: number;
   signature: string;
+  useWallet: boolean;
 }
 
 export const CreateTaskAtom = atom({
   key: "/create/atom/key/input",
-  default: { worker: 15 } as CreateTaskInput,
+  default: { worker: 15, useWallet: false } as CreateTaskInput,
 });

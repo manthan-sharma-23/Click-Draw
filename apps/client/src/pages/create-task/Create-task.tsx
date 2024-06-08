@@ -1,5 +1,6 @@
 import {
   Alert,
+  Checkbox,
   CircularProgress,
   LinearProgress,
   Slider,
@@ -24,6 +25,8 @@ import {
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { CreateTaskInServer } from "../../lib/core/server_calls/tasks/create-tasks";
+import useGetUser from "@/lib/hooks/useGetUser";
+import { getUserServerCall } from "@/lib/core/server_calls/users/getUser.server-call";
 
 const CreateTask = () => {
   const [progress, setProgress] = useState<null | number>(null);
@@ -34,6 +37,7 @@ const CreateTask = () => {
   const [signature, setTxSignature] = useState("");
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
+  const { user } = useGetUser();
   const [txError, setTxError] = useState("");
 
   useEffect(() => {
@@ -68,31 +72,46 @@ const CreateTask = () => {
     try {
       setProgress(5);
       setLoading(true);
-      const transaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: publicKey!,
-          toPubkey: new PublicKey(owner_public_key)!,
-          lamports: taskInput.funds,
-        })
-      );
-      const {
-        context: { slot: minContextSlot },
-        value: { blockhash, lastValidBlockHeight },
-      } = await connection.getLatestBlockhashAndContext();
 
-      const signature = await sendTransaction(transaction, connection, {
-        minContextSlot,
-      });
+      let lamports = taskInput.funds;
 
-      setProgress(25);
-      console.log(signature);
-      await connection.confirmTransaction({
-        blockhash,
-        lastValidBlockHeight,
-        signature,
-      });
-      setTxSignature(signature);
-      setTxError("");
+      if (taskInput.useWallet) {
+        const wallet = (
+          await getUserServerCall({
+            token: window.localStorage.getItem("token")!,
+          })
+        )?.Worker.wallet!;
+
+        lamports = taskInput.funds - wallet.currentAmount;
+      }
+
+      if (lamports > 0) {
+        const transaction = new Transaction().add(
+          SystemProgram.transfer({
+            fromPubkey: publicKey!,
+            toPubkey: new PublicKey(owner_public_key)!,
+            lamports: lamports,
+          })
+        );
+        const {
+          context: { slot: minContextSlot },
+          value: { blockhash, lastValidBlockHeight },
+        } = await connection.getLatestBlockhashAndContext();
+
+        const signature = await sendTransaction(transaction, connection, {
+          minContextSlot,
+        });
+
+        setProgress(25);
+        console.log(signature);
+        await connection.confirmTransaction({
+          blockhash,
+          lastValidBlockHeight,
+          signature,
+        });
+        setTxSignature(signature);
+        setTxError("");
+      }
 
       setProgress(45);
 
@@ -130,6 +149,8 @@ const CreateTask = () => {
       console.log(error);
     }
   };
+
+  console.log(taskInput);
 
   return (
     <div className="h-full w-full flex flex-col items-start justify-start gap-3 ">
@@ -215,9 +236,19 @@ const CreateTask = () => {
               }
             />
           </div>
-          <p className="w-full mt-4 flex font-poppins text-black/50">
-            i Note: Tasks will automatically expire after a time period of 5
-            days
+          <div className="items-center flex justify-start gap-3 w-full p-0 border my-0">
+            <Checkbox
+              sx={{ margin: 0, border: 0 }}
+              color="default"
+              onChange={(e) =>
+                setTaskInput((v) => ({ ...v, useWallet: e.target.checked }))
+              }
+              checked={taskInput.useWallet}
+            />
+            <p>Use wallet's amount {user?.Worker.wallet?.currentAmount}</p>
+          </div>
+          <p className="w-full mt-2 flex font-poppins text-black/50">
+            Note: Tasks will automatically expire after a time period of 5 days
           </p>
         </div>
         <div className="w-[50%] h-full">
@@ -276,7 +307,7 @@ const CreateTask = () => {
           className="bg-darkblue font-semibold hover:opacity-80 transition-all h-[2.8rem] font-roboto w-[8rem] flex justify-center items-center rounded-lg text-white"
         >
           {loading ? (
-            <CircularProgress size="medium" color="success"/>
+            <CircularProgress size="medium" color="success" />
           ) : (
             <div className="flex gap-3 items-center">
               PAY SOL

@@ -22,11 +22,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { app_navigation_routes } from "@/utils/config/links";
+import { AiTwotoneWallet } from "react-icons/ai";
+import useGetUser from "@/lib/hooks/useGetUser";
 
 const Topbar = () => {
   const { publicKey, signMessage, connected } = useWallet();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { user } = useGetUser();
 
   useEffect(() => {
     signAndSend();
@@ -49,6 +52,7 @@ const Topbar = () => {
       if (token) {
         window.localStorage.setItem("token", token);
         <Alert severity="success">Authorized Successfully</Alert>;
+        navigate("/");
       } else {
         <Alert severity="error">{`ERROR : ${result.data}`}</Alert>;
       }
@@ -58,7 +62,7 @@ const Topbar = () => {
   return (
     <div className="h-full w-full flex justify-between items-center px-[10%] bg-black">
       <div className="w-[50vw] h-full flex gap-[3rem] items-center ">
-        <p className="w-[15%] cursor-pointer font-poppins text-xl font-medium tracking-tighter font-mono">
+        <p className="w-[15%] cursor-pointer text-xl font-medium tracking-tighter font-mono">
           /= ClickDraw
         </p>
         <div className="w-[60%] h-full flex justify-start gap-4 ">
@@ -82,7 +86,11 @@ const Topbar = () => {
             style={{ backgroundColor: "black", height: "4.5vh" }}
           />
         ) : (
-          <div className="flex gap-4 items-center ">
+          <div className="flex gap-6 items-center ">
+            <div className="flex gap-3 items-center justify-center ">
+              <p>{user?.Worker.wallet?.currentAmount}</p>
+              <AiTwotoneWallet className="text-2xl bg-yellow-400" />
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <ProfileSection publicKey={publicKey} />

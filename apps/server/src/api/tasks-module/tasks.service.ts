@@ -61,6 +61,100 @@ export class TasksService {
         }),
       );
 
+      //wallet trransact
+
+      const wallet_tx = await this.databaseService.$transaction(async (tx) => {
+        const address = user.publicKey;
+
+        const worker = await tx.worker.findUnique({
+          where: {
+            address,
+          },
+        });
+
+        const wallet = await tx.wallet.findUnique({
+          where: {
+            workerId: worker.id,
+          },
+        });
+
+        const amount = data.funds;
+
+        if (data.useWallet) {
+          let val = wallet.currentAmount - amount;
+
+          if (val <= 0) {
+            val = -1 * val;
+            const wallet_use_description = `${wallet.currentAmount} lamports used from  wallet for creating task`;
+            const solana_mainnet_description = `${amount} lamport used from solana net`;
+
+            await tx.wallet.update({
+              where: {
+                workerId: worker.id,
+              },
+              data: {
+                currentAmount: 0,
+              },
+            });
+
+            // wallet transaction
+            await tx.transaction.create({
+              data: {
+                walletId: wallet.id,
+                description: wallet_use_description,
+                amount: 0,
+                status: 'SUCCESS',
+                transaction_type: 'WITHDRAW',
+                to: 'click_Draw_task_creation',
+                from: 'wallet',
+              },
+            });
+
+            // solana mainnet tranasaction
+            await tx.transaction.create({
+              data: {
+                walletId: wallet.id,
+                description: solana_mainnet_description,
+                amount: val,
+                status: 'SUCCESS',
+                transaction_type: 'WITHDRAW',
+                to: 'click_draw_task_creation',
+                from: 'Solana_Onchain',
+              },
+            });
+          } else {
+            const wallet_use_description = `${amount} lamports used for creating task through Wallet`;
+
+            await tx.wallet.update({
+              where: {
+                workerId: worker.id,
+              },
+              data: {
+                currentAmount: val,
+              },
+            });
+
+            await tx.transaction.create({
+              data: {
+                walletId: wallet.id,
+                description: wallet_use_description,
+                amount,
+                status: 'SUCCESS',
+                transaction_type: 'WITHDRAW',
+                to: 'Click_Draw_task_creation',
+                from: 'wallet',
+              },
+            });
+          }
+        }
+
+        // const wallet = await tx.wallet.update({
+        //   where: {
+        //     workerId: worker.id,
+        //   },
+        // });
+      });
+
       // Database Query
       const task = await this.databaseService.task.create({
         data: {

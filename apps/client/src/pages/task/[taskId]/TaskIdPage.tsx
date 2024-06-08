@@ -58,7 +58,7 @@ const TaskByIdPage = () => {
           <p>Funds: {task.task.funds} (lamports)</p>
           <p>Responses: {task.task.responses}</p>
           <p>Status: {task.task.status}</p>
-          <p>Options: {task.task.options.length}</p>
+          <p>Options: {task.task.options?.length}</p>
           <p>Created At: {moment(task.task.createdAt).format("LLL")}</p>
           <p>Created By Id: {task.task.userId}</p>
 
@@ -161,7 +161,7 @@ const SubmissionTable = ({ task }: { task: Task }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {task.submissions.map((submission, index) => (
+          {task.submissions?.map((submission, index) => (
             <TableRow>
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>{submission.workerId}</TableCell>

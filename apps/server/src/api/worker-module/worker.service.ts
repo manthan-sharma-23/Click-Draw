@@ -62,7 +62,7 @@ export class WorkerService {
 
           const wallet = await tx.wallet.create({
             data: {
-              workerId: worker.id,
+              workerId: createWorker.id,
             },
           });
 
@@ -196,5 +196,4 @@ export class WorkerService {
       throw new InternalServerErrorException(error);
     }
   }
-
 }

@@ -2,17 +2,13 @@ import { useGetWorkerTasks } from "@/lib/core/hooks/useGetWorkerTasks";
 import { getNextTask } from "@/lib/core/server_calls/worker/get.next-task.worker";
 import { NextTaskAtom } from "@/lib/core/store/atom/next.task.atom";
 import { SubmissionByWorkerSelector } from "@/lib/core/store/selectors/submissionCountSelector";
-import {
-  Alert,
-  AlertTitle,
-  Button,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
+import { Alert, AlertTitle, CircularProgress, Typography } from "@mui/material";
 import { CornerDownRight } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import TaskTable from "./TaskTable";
+import { Button } from "@/utils/components/ui/button";
 
 const Tasks = () => {
   const { error, tasks, loading } = useGetWorkerTasks();
@@ -68,34 +64,23 @@ const Tasks = () => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col pt-4 justify-center items-start overflow-hidden">
+    <div className="h-full w-full flex flex-col pt-4 justify-start items-center overflow-hidden">
       {tasks.length <= 0 && (
         <Alert severity="success" color="warning" sx={{ width: "100%" }}>
           <AlertTitle>NO TASKS PENDING</AlertTitle>
           Hey there please come back later, no tasks for you yet :)
         </Alert>
       )}
-      <div className="w-full h-full flex flex-col gap-2 justify-center items-center">
-        <Typography
-          className="font-poppins"
-          variant="h6"
-          component={"h5"}
-          fontWeight={600}
-        >
-          You have {tasks.length} new tasks !
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={navigateToNextTask}
-          disabled={tasks.length <= 0}
-        >
-          <div className="flex justify-center items-center gap-2 px-2 py-1">
-            <CornerDownRight size={15} />
-            <p className="font-medium">Get Started</p>
-          </div>
-        </Button>
+      {tasks.length > 0 && (
+        <div className="h-auto w-full flex justify-between items-center">
+          <p className="text-xl font-medium font-poppins">
+            Tasks: {tasks.length}
+          </p>
+          <Button onClick={navigateToNextTask}>Get Started</Button>
+        </div>
+      )}
+      <div className="w-full h-auto mt-5">
+        <TaskTable tasks={tasks} />
       </div>
     </div>
   );
