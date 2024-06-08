@@ -11,8 +11,6 @@ export const getWalletTransactions = async ({ token }: { token: string }) => {
     });
     const data = result.data as Transaction[];
 
-    console.log(data);
-
     return data;
   } catch (error) {
     console.log(error);

@@ -51,7 +51,7 @@ export class WalletService {
 
   async PayoutWallet(req: Request) {
     const { publicKey, workerId } = req.worker;
-    const { anotherKey } = req.body;
+    const { address: anotherKey } = req.body;
 
     if (!publicKey || !workerId)
       throw new UnauthorizedException('Not auhtorized to this route');

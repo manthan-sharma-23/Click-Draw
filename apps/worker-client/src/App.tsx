@@ -8,6 +8,7 @@ import Tasks from "./pages/Tasks/Tasks";
 import TaskById from "./pages/Tasks/TaskById";
 import SubmissionById from "@/pages/submission/[submissionId]/SubmissionById";
 import Wallet from "./pages/profile/WorkerWallet";
+import { Toaster } from "./utils/components/ui/toaster";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
               </Route>
             </Routes>
           </BrowserRouter>
+          <Toaster />
         </WalletAdapter>
       </RecoilRoot>
     </div>
