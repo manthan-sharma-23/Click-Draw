@@ -86,7 +86,7 @@ CREATE TABLE "Wallet" (
 -- CreateTable
 CREATE TABLE "Transaction" (
     "id" TEXT NOT NULL,
-    "address" TEXT,
+    "signature" TEXT,
     "url" TEXT,
     "description" TEXT,
     "amount" INTEGER NOT NULL,
@@ -96,6 +96,7 @@ CREATE TABLE "Transaction" (
     "status" "TransactionStatus" NOT NULL DEFAULT 'PROCESSING',
     "transaction_type" "TransactionType" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "post_balance" INTEGER NOT NULL,
 
     CONSTRAINT "Transaction_pkey" PRIMARY KEY ("id")
 );

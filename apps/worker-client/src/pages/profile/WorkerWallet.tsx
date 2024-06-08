@@ -55,6 +55,11 @@ function WalletUI({ wallet, worker }: { worker: Worker; wallet?: WalletType }) {
           <p>{(wallet?.currentAmount || 0) / public_coin_modal.sol}</p>
           <SiSolana className="text-3xl text-purple-600" />
         </div>
+        {wallet.lockedAmount > 0 && (
+          <p className="text-sm text-white">
+            Locked Amount : {wallet.lockedAmount}
+          </p>
+        )}
         <Dialog>
           <DialogTrigger>
             <Button className="mt-3 w-auto px-[1rem] bg-gradient-to-r from-purple-600 to-purple-800 gap-2 flex items-center justify-center hover:from-purple-700 hover:to-purple-900 hover:scale-105 transition-transform duration-200">

@@ -115,6 +115,7 @@ export class WalletService {
                 status: 'SUCCESS',
                 transaction_type: 'WITHDRAW',
                 signature: onchain_solana_transaction.signature,
+                post_balance: unlockWallet.currentAmount,
               },
             });
 
@@ -150,6 +151,7 @@ export class WalletService {
                 description: tx_description,
                 status: 'REVOKED',
                 transaction_type: 'WITHDRAW',
+                post_balance: unlockWallet.currentAmount,
               },
             });
 

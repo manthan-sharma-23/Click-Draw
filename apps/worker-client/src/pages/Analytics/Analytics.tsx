@@ -64,16 +64,23 @@ const SubmissionsPerDayGraph = ({
 }: {
   data: { date: Date; submissionCount: number }[];
 }) => {
+  console.log(data)
+  const dates = data.map((v) => new Date(v.date).getDate());
+  const count = data.map((v) => v.submissionCount);
+
+  console.log(dates);
+  console.log(count);
+
   return (
     <div className="h-full w-full flex items-center justify-center">
       <LineChart
-        xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+        xAxis={[{ data: dates }]}
         series={[
           {
             curve: "linear",
             color: "#3E63DD",
-            area:true,
-            data: [2, 5.5, 2, 8.5, 1.5, 5],
+            area: true,
+            data: [...count],
           },
         ]}
         width={600}

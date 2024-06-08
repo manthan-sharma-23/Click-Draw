@@ -92,6 +92,7 @@ export class SubmissionService {
             description: tx_description,
             from: 'click_draw_poll_submission',
             to: 'Wallet',
+            post_balance: wallet.currentAmount,
           },
         });
 
@@ -252,20 +253,25 @@ export class SubmissionService {
         },
       });
 
-      const submissionsPerDayByUser = submissions.reduce((acc, submission) => {
-        const date = submission.createdAt.toDateString();
-        const existingEntry = acc.find((entry) => entry.date === date);
-        if (existingEntry) {
-          existingEntry.submissionCount++;
-        } else {
-          acc.push({ date, submissionCount: 1 });
-        }
-        return acc;
-      }, []);
+      const submissionsPerDayByUser = submissions.reduce(
+        (acc, submission) => {
+          const date = new Date(submission.createdAt.toDateString()); // Ensure date is a Date object
+          const existingEntry = acc.find(
+            (entry) => entry.date.getTime() === date.getTime(),
+          );
+          if (existingEntry) {
+            existingEntry.submissionCount++;
+          } else {
+            acc.push({ date, submissionCount: 1 });
+          }
+          return acc;
+        },
+        [] as { date: Date; submissionCount: number }[],
+      );
 
       return submissionsPerDayByUser;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw new InternalServerErrorException(error);
     }
   }

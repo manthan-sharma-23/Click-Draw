@@ -44,6 +44,7 @@ const TransactionsTable = () => {
             <TableHead>From</TableHead>
             <TableHead>To</TableHead>
             <TableHead className="text-center">Amount</TableHead>
+            <TableHead className="text-center">Post Wallet Balance</TableHead>
             <TableHead className="text-center font-medium">Time</TableHead>
           </TableRow>
         </TableHeader>
@@ -73,6 +74,7 @@ const TransactionsTable = () => {
                 <p>{transaction.amount}</p>
                 <TransactionIcon transaction={transaction} />
               </TableCell>
+              <TableCell>{transaction.post_balance}</TableCell>
               <TableCell>
                 {moment(transaction.createdAt).format("LLL")}
               </TableCell>

@@ -89,7 +89,7 @@ export class TasksService {
             const wallet_use_description = `${wallet.currentAmount} lamports debited from  wallet for creating task`;
             const solana_mainnet_description = `${amount} lamports debited from solana net for creating task`;
 
-            await tx.wallet.update({
+            const afterUpdateWallet = await tx.wallet.update({
               where: {
                 workerId: worker.id,
               },
@@ -108,6 +108,7 @@ export class TasksService {
                 transaction_type: 'WITHDRAW',
                 to: 'click_draw_task_creation',
                 from: 'Wallet',
+                post_balance: afterUpdateWallet.currentAmount,
               },
             });
 
@@ -121,12 +122,13 @@ export class TasksService {
                 transaction_type: 'WITHDRAW',
                 to: 'click_draw_task_creation',
                 from: 'Solana_Onchain',
+                post_balance: afterUpdateWallet.currentAmount,
               },
             });
           } else {
             const wallet_use_description = `${amount} lamports debited for creating task through Wallet`;
 
-            await tx.wallet.update({
+            const afterWalletUpdate = await tx.wallet.update({
               where: {
                 workerId: worker.id,
               },
@@ -144,6 +146,7 @@ export class TasksService {
                 transaction_type: 'WITHDRAW',
                 to: 'click_draw_task_creation',
                 from: 'Wallet',
+                post_balance: afterWalletUpdate.currentAmount,
               },
             });
           }

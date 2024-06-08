@@ -107,6 +107,7 @@ export interface Transaction {
   transaction_type: TransactionType;
   createdAt: Date;
   Submission?: Submission | null;
+  post_balance: number;
 }
 
 export interface OptionStatistics {

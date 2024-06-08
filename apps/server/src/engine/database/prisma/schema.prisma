@@ -110,7 +110,7 @@ model Wallet {
 
 model Transaction {
   id          String  @id @default(uuid())
-  signature     String?
+  signature   String?
   url         String?
   description String?
 
@@ -125,5 +125,6 @@ model Transaction {
   transaction_type TransactionType
   createdAt        DateTime          @default(now())
 
-  Submission Submission?
+  Submission   Submission?
+  post_balance Int
 }
