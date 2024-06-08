@@ -93,7 +93,7 @@ const GetTaskById = () => {
               defaultValue="female"
               name="radio-buttons-group"
             >
-              {task.options.map((option) => (
+              {task.options?.map((option) => (
                 <FormControlLabel
                   value={option.id}
                   control={<Radio />}

@@ -19,7 +19,7 @@ import {
   DialogTrigger,
 } from "@/utils/components/ui/dialog";
 import { useGetWorker } from "@/lib/core/hooks/useGetWorker";
-import { CircularProgress, Input, TextField } from "@mui/material";
+import { Alert, CircularProgress, Input, TextField } from "@mui/material";
 import { useState } from "react";
 import { putPayoutWallet } from "@/lib/core/server_calls/wallet/put-cashout-wallet.server-call";
 import { useToast } from "@/utils/components/ui/use-toast";
@@ -123,11 +123,16 @@ function CashOutUI() {
             sx={{ marginTop: "1rem", color: "red" }}
             size="medium"
           />
-          <p className="font-poppins text-black/70 mt-2 flex gap-1">
-            Type
-            <p className="italic font-bold text-black">"confirm"</p>
-            as this action cannot be undone
-          </p>
+          <Alert
+            sx={{ marginTop: "1rem" }}
+            severity={confirm === confirmString ? "info" : "warning"}
+          >
+            <p className="font-poppins text-black/70 flex gap-1">
+              Type
+              <p className="italic font-bold text-black">"confirm"</p>
+              as this action cannot be undone
+            </p>
+          </Alert>
           <TextField
             disabled={loading}
             color="primary"

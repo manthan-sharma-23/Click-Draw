@@ -19,6 +19,12 @@ export class SubmissionController {
     return await this.submissionService.getWorkerSubmissions(req);
   }
 
+  @Get('/per-day')
+  @UseGuards(AuthGuard)
+  async getSubmissionsPerDay(@Req() req: Request) {
+    return await this.submissionService.getSubmissionsPerDay(req);
+  }
+  
   @Get('/:submissionId')
   @UseGuards(AuthGuard)
   async getSubmissionById(@Param('submissionId') submissionId: string) {

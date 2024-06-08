@@ -90,8 +90,8 @@ export class SubmissionService {
             status: 'SUCCESS',
             transaction_type: 'DEPOSIT',
             description: tx_description,
-            from:"click_draw_poll_submission",
-            to:"Wallet"
+            from: 'click_draw_poll_submission',
+            to: 'Wallet',
           },
         });
 
@@ -233,6 +233,39 @@ export class SubmissionService {
       return submission;
     } catch (error) {
       console.log('ERROR :', error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+  async getSubmissionsPerDay(req: Request) {
+    try {
+      const { workerId } = req.worker;
+
+      const submissions = await this.databaseService.submission.findMany({
+        where: {
+          workerId,
+        },
+        include: {
+          task: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      const submissionsPerDayByUser = submissions.reduce((acc, submission) => {
+        const date = submission.createdAt.toDateString();
+        const existingEntry = acc.find((entry) => entry.date === date);
+        if (existingEntry) {
+          existingEntry.submissionCount++;
+        } else {
+          acc.push({ date, submissionCount: 1 });
+        }
+        return acc;
+      }, []);
+
+      return submissionsPerDayByUser;
+    } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException(error);
     }
   }

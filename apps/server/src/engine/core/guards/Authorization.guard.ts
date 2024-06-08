@@ -20,7 +20,6 @@ export class AuthGuard implements CanActivate {
     const data = this.jwtService.decodeToken({ token });
 
     if (data.workerId) {
-      console.log(data);
       request.worker = data;
     } else if (data.userId) {
       request.user = data;

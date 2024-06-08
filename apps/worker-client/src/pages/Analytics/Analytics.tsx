@@ -5,10 +5,13 @@ import React from "react";
 import { useRecoilValue } from "recoil";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import AnalyticsTable from "./AnalyticsTable";
+import useGetSubmissionsPerDay from "@/lib/core/hooks/useGetSubmissionsPerDay";
+import { LineChart } from "@mui/x-charts/LineChart";
 
 const Analytics = () => {
   const { submissions, loading } = useGetSubmissions();
   const worker = useRecoilValue(WorkerAtom);
+  const { submissionsPerDay } = useGetSubmissionsPerDay();
 
   if (loading) {
     return (
@@ -20,15 +23,28 @@ const Analytics = () => {
 
   return (
     <div className="h-full w-full flex flex-col items-center justify-start">
-      <div className="mt-5 w-full h-auto flex">
-        <div className="w-2/3 h-auto ">
-          <p className="text-5xl font-poppins font-medium">Analytics</p>
-        </div>
-        <div className="w-1/3 h-auto py-8 px-6 border flex justify-start items-center">
-          <SubmissionCountMeterUI
-            value={submissions?.submissionCountForDay || 0}
-          />
-          <div></div>
+      <div className="mt-5 w-full h-auto flex  flex-col">
+        <p className="text-5xl font-poppins font-medium">Analytics</p>
+        <div className="my-3 flex w-full gap-5 items-center justify-center">
+          <div className="w-2/3 h-auto ">
+            <SubmissionsPerDayGraph data={submissionsPerDay} />
+          </div>
+          <div className="w-1/3 h-auto p-6 gap-3 flex justify-start items-center ">
+            <div className="w-2/3 h-full flex flex-col justify-center items-start gap-2">
+              <p className="text-lg font-poppins font-semibold">
+                Submissions Today : {submissions?.submissionCountForDay}
+              </p>
+              <p className="text-lg font-poppins font-semibold">
+                Total Submissions : {submissions?.submissions.length}
+              </p>
+              <p className="text-lg font-poppins font-semibold">
+                Submission Limit Per Day : 10
+              </p>
+            </div>
+            <SubmissionCountMeterUI
+              value={submissions?.submissionCountForDay || 0}
+            />
+          </div>
         </div>
       </div>
       <div className="mt-5 flex h-auto w-full flex-col justify-start items-center ">
@@ -39,6 +55,30 @@ const Analytics = () => {
           <AnalyticsTable submissions={submissions?.submissions || []} />
         </div>
       </div>
+    </div>
+  );
+};
+
+const SubmissionsPerDayGraph = ({
+  data,
+}: {
+  data: { date: Date; submissionCount: number }[];
+}) => {
+  return (
+    <div className="h-full w-full flex items-center justify-center">
+      <LineChart
+        xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+        series={[
+          {
+            curve: "linear",
+            color: "#3E63DD",
+            area:true,
+            data: [2, 5.5, 2, 8.5, 1.5, 5],
+          },
+        ]}
+        width={600}
+        height={350}
+      />
     </div>
   );
 };
