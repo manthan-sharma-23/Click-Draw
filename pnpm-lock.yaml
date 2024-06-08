@@ -83,6 +83,9 @@ importers:
       moment:
         specifier: ^2.30.1
         version: 2.30.1
+      numbro:
+        specifier: ^2.5.0
+        version: 2.5.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -14896,6 +14899,12 @@ packages:
 
   /nullthrows@1.1.1:
     resolution: {integrity: sha512-2vPPEi+Z7WqML2jZYddDIfy5Dqb0r2fze2zTxNNknZaFpVHU3mFB3R+DWeJWGVx0ecvttSGlJTI+WG+8Z4cDWw==}
+    dev: false
+
+  /numbro@2.5.0:
+    resolution: {integrity: sha512-xDcctDimhzko/e+y+Q2/8i3qNC9Svw1QgOkSkQoO0kIPI473tR9QRbo2KP88Ty9p8WbPy+3OpTaAIzehtuHq+A==}
+    dependencies:
+      bignumber.js: 9.1.2
     dev: false
 
   /ob1@0.80.9:

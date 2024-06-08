@@ -81,12 +81,13 @@ export class TasksService {
         const amount = data.funds;
 
         if (data.useWallet) {
-          let val = wallet.currentAmount - amount;
+          const walletAmount = wallet.currentAmount;
+          let val = walletAmount - amount;
 
           if (val <= 0) {
             val = -1 * val;
-            const wallet_use_description = `${wallet.currentAmount} lamports used from  wallet for creating task`;
-            const solana_mainnet_description = `${amount} lamport used from solana net`;
+            const wallet_use_description = `${wallet.currentAmount} lamports debited from  wallet for creating task`;
+            const solana_mainnet_description = `${amount} lamports debited from solana net for creating task`;
 
             await tx.wallet.update({
               where: {
@@ -102,11 +103,11 @@ export class TasksService {
               data: {
                 walletId: wallet.id,
                 description: wallet_use_description,
-                amount: 0,
+                amount: walletAmount,
                 status: 'SUCCESS',
                 transaction_type: 'WITHDRAW',
-                to: 'click_Draw_task_creation',
-                from: 'wallet',
+                to: 'click_draw_task_creation',
+                from: 'Wallet',
               },
             });
 
@@ -123,7 +124,7 @@ export class TasksService {
               },
             });
           } else {
-            const wallet_use_description = `${amount} lamports used for creating task through Wallet`;
+            const wallet_use_description = `${amount} lamports debited for creating task through Wallet`;
 
             await tx.wallet.update({
               where: {
@@ -141,8 +142,8 @@ export class TasksService {
                 amount,
                 status: 'SUCCESS',
                 transaction_type: 'WITHDRAW',
-                to: 'Click_Draw_task_creation',
-                from: 'wallet',
+                to: 'click_draw_task_creation',
+                from: 'Wallet',
               },
             });
           }

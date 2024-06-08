@@ -90,6 +90,8 @@ export class SubmissionService {
             status: 'SUCCESS',
             transaction_type: 'DEPOSIT',
             description: tx_description,
+            from:"click_draw_poll_submission",
+            to:"Wallet"
           },
         });
 
