@@ -13,6 +13,7 @@ import { DatabaseService } from '../../engine/database/database.service';
 import * as jwt from 'jsonwebtoken';
 import { USER_SECRET_KEY } from 'src/engine/utils/config/env.config';
 import { TaskStatisticsService } from 'src/engine/core/services/Statistics.service';
+import { Wallet } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -54,6 +55,8 @@ export class UserService {
           },
         });
 
+        let wallet: Wallet;
+
         if (!user) {
           let worker = await tx.worker.findUnique({
             where: {
@@ -68,17 +71,27 @@ export class UserService {
               },
             });
 
-            await tx.wallet.create({
+            wallet = await tx.wallet.create({
               data: {
                 workerId: worker.id,
               },
             });
           }
-          
+
           user = await tx.user.create({
             data: { address: worker.address, workerId: worker.id },
             include: {
               Worker: true,
+            },
+          });
+
+          await tx.worker.update({
+            where: {
+              id: worker.id,
+            },
+            data: {
+              userId: user.id,
+              walletId: wallet.id,
             },
           });
         }

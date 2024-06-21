@@ -78,7 +78,7 @@ model Worker {
   user        User?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  walletId    String?
+  walletId    Int?
   userId      Int?
 }
 

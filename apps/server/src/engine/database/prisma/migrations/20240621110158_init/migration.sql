@@ -54,7 +54,7 @@ CREATE TABLE "Worker" (
     "address" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "walletId" TEXT,
+    "walletId" INTEGER,
     "userId" INTEGER,
 
     CONSTRAINT "Worker_pkey" PRIMARY KEY ("id")
