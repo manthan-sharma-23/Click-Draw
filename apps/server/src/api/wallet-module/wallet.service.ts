@@ -53,9 +53,11 @@ export class WalletService {
     const { publicKey, workerId } = req.worker;
     const { address: anotherKey } = req.body;
 
-    if (!publicKey || !workerId)
+    if (!publicKey || !workerId) {
       throw new UnauthorizedException('Not auhtorized to this route');
-
+    }
+    
+    console.log(publicKey, workerId, anotherKey);
     try {
       // First Database tx to lock amount
       const lockWallet = await this.databaseService.$transaction(async (tx) => {

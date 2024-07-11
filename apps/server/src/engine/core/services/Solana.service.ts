@@ -36,7 +36,7 @@ export class SolanaService {
       }),
     );
 
-    console.log(transaction);
+        console.log(transaction);
 
     try {
       const signature = await web3.sendAndConfirmTransaction(
