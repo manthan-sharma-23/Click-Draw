@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
 import { Transaction } from "../types/app.types";
 import { getWalletTransactions } from "../server_calls/wallet/get-transactions.server-call";
 

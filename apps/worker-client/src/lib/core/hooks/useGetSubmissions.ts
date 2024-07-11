@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { SubmissionsByWorker } from "../types/app.types";
 import { getSubmissionsByWorker } from "../server_calls/submission/get-submissions-by-worker";
 import { useRecoilState } from "recoil";
 import { SubmissionsAtom } from "../store/atom/submissions.atom";

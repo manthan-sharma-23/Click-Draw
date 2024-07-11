@@ -43,7 +43,7 @@ const Topbar = () => {
 
       const signature = await signMessage?.(encodedSign);
 
-      const result = await axios.post(`${BACKEND_URL}/users/signin`, {
+      const result = await axios.post(`${BACKEND_URL}/v1/users/signin`, {
         publicKey: publicKey?.toString(),
         signature,
         signString,

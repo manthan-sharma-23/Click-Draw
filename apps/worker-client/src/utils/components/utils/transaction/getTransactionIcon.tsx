@@ -1,4 +1,3 @@
-import React from "react";
 import { Transaction } from "../../../../lib/core/types/app.types";
 import { FiArrowDownRight } from "react-icons/fi";
 import { FiArrowUpRight } from "react-icons/fi";

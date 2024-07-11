@@ -1,6 +1,5 @@
 import { useRecoilValue } from "recoil";
 import TransactionsTable from "./TransactionsTable";
-import walletPNG from "@/assets/wallet.png";
 import { WorkerAtom } from "@/lib/core/store/atom/worker.atom";
 import { SiSolana } from "react-icons/si";
 import {
@@ -13,13 +12,10 @@ import { FiExternalLink } from "react-icons/fi";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/utils/components/ui/dialog";
 import { useGetWorker } from "@/lib/core/hooks/useGetWorker";
-import { Alert, CircularProgress, Input, TextField } from "@mui/material";
+import { Alert, CircularProgress, TextField } from "@mui/material";
 import { useState } from "react";
 import { putPayoutWallet } from "@/lib/core/server_calls/wallet/put-cashout-wallet.server-call";
 import { useToast } from "@/utils/components/ui/use-toast";

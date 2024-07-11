@@ -71,7 +71,7 @@ const HomePage = () => {
               </p>
               <p className="w-full">Funded : {task.task.funds} lamports</p>
               <p className="w-full">
-                No. of Options : {task.task.options.length}
+                No. of Options : {task.task.options?.length}
               </p>
               <p className="w-full">Status : {task.task.status}</p>
             </div>

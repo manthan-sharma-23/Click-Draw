@@ -1,6 +1,6 @@
 import { WorkerAtom } from "@/lib/core/store/atom/worker.atom";
 import { useRecoilValue } from "recoil";
-import { Box, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Button as ShadButton } from "@/utils/components/ui/button";
 import { useNavigate } from "react-router-dom";

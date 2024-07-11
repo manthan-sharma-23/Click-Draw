@@ -1,7 +1,6 @@
 import useGetTaskById from "@/lib/hooks/useGetTaskById";
 import { Alert, Avatar, CircularProgress } from "@mui/material";
 import moment from "moment";
-import React from "react";
 import {
   Table,
   TableBody,
@@ -11,8 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Link, useParams } from "react-router-dom";
-import { OptionStatistics, Task, TaskResult } from "@/lib/core/types/models";
+import { Link } from "react-router-dom";
+import { OptionStatistics, Task } from "@/lib/core/types/models";
 import { cn } from "@/lib/utils";
 import { LineChart } from "@mui/x-charts/LineChart";
 

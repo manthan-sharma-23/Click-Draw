@@ -1,8 +1,5 @@
 import useGetSubmissions from "@/lib/core/hooks/useGetSubmissions";
-import { WorkerAtom } from "@/lib/core/store/atom/worker.atom";
 import { CircularProgress } from "@mui/material";
-import React from "react";
-import { useRecoilValue } from "recoil";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import AnalyticsTable from "./AnalyticsTable";
 import useGetSubmissionsPerDay from "@/lib/core/hooks/useGetSubmissionsPerDay";
@@ -10,7 +7,6 @@ import { LineChart } from "@mui/x-charts/LineChart";
 
 const Analytics = () => {
   const { submissions, loading } = useGetSubmissions();
-  const worker = useRecoilValue(WorkerAtom);
   const { submissionsPerDay } = useGetSubmissionsPerDay();
 
   if (loading) {
@@ -64,7 +60,7 @@ const SubmissionsPerDayGraph = ({
 }: {
   data: { date: Date; submissionCount: number }[];
 }) => {
-  console.log(data)
+  console.log(data);
   const dates = data.map((v) => new Date(v.date).getDate());
   const count = data.map((v) => v.submissionCount);
 

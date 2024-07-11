@@ -27,6 +27,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/serve-static": "^4.0.2",
     "@prisma/client": "^5.14.0",
     "@solana/web3.js": "^1.91.8",
     "axios": "^1.7.2",

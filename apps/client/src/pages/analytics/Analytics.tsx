@@ -11,7 +11,8 @@ import useGetUser from "@/lib/hooks/useGetUser";
 
 const Analytics = () => {
   const { loading, tasks } = useGetCreatedTasks();
-  const { task: lastTask, loading: lastTaskLoading } = useGetLastTaskByUser();
+  const { task: lastTask
+   } = useGetLastTaskByUser();
   const { user } = useGetUser();
   const navigate = useNavigate();
 

@@ -22,7 +22,6 @@ import { useEffect } from "react";
 import { getWorkerFromDb } from "@/lib/core/server_calls/worker/getWorker.server_call";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import { WorkerAtom } from "../../../lib/core/store/atom/worker.atom";
-import { TasksAtom } from "@/lib/core/store/atom/tasks.atom";
 import { AiTwotoneWallet } from "react-icons/ai";
 
 const navOptions = [
@@ -46,7 +45,6 @@ const Topbar = () => {
   const reset_worker = useResetRecoilState(WorkerAtom);
   const [signString, encodedString] =
     generate_functional_string_for_signature();
-  const setTasks = useSetRecoilState(TasksAtom);
   const user = useRecoilValue(WorkerAtom);
   const navigate = useNavigate();
 

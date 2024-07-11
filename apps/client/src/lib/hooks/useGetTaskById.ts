@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { OptionStatistics, Task, TaskResult } from "../core/types/models";
+import { TaskResult } from "../core/types/models";
 import { getTaskById } from "../core/server_calls/tasks/get-task.byId.server-call";
 import { useParams } from "react-router-dom";
 

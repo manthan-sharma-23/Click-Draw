@@ -4,7 +4,7 @@ import { User } from "../../types/models";
 
 export const getUserServerCall = async ({ token }: { token: string }) => {
   try {
-    const result = await axios.get(`${BACKEND_URL}/users/`, {
+    const result = await axios.get(`${BACKEND_URL}/v1/users/`, {
       headers: {
         authorization: "Bearer " + token,
       },

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { SideBarOptions } from "../../config/sideBar.config";
 
@@ -16,6 +15,7 @@ const SideBar = () => {
         </Link>
       ))}
     </div>
+    
   );
 };
 

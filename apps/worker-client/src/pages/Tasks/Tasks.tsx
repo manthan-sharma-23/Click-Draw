@@ -2,18 +2,17 @@ import { useGetWorkerTasks } from "@/lib/core/hooks/useGetWorkerTasks";
 import { getNextTask } from "@/lib/core/server_calls/worker/get.next-task.worker";
 import { NextTaskAtom } from "@/lib/core/store/atom/next.task.atom";
 import { SubmissionByWorkerSelector } from "@/lib/core/store/selectors/submissionCountSelector";
-import { Alert, AlertTitle, CircularProgress, Typography } from "@mui/material";
-import { CornerDownRight } from "lucide-react";
-import React from "react";
+import { Alert, AlertTitle, CircularProgress } from "@mui/material";
+
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import TaskTable from "./TaskTable";
 import { Button } from "@/utils/components/ui/button";
 
 const Tasks = () => {
   const { error, tasks, loading } = useGetWorkerTasks();
   const navigate = useNavigate();
-  const [nextTask, setNextTask] = useRecoilState(NextTaskAtom);
+  const setNextTask = useSetRecoilState(NextTaskAtom);
   const reset_next_task = useResetRecoilState(NextTaskAtom);
   const submissions = useRecoilValue(SubmissionByWorkerSelector);
 

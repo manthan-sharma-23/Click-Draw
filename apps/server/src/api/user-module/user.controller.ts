@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { Request } from 'express';
 import { AuthGuard } from 'src/engine/core/guards/Authorization.guard';
 
-@Controller('users')
+@Controller('v1/users')
 export class UserController {
   constructor(private userService: UserService) {}
 

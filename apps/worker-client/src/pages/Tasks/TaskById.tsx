@@ -20,7 +20,7 @@ import { useRecoilValue } from "recoil";
 const GetTaskById = () => {
   const task = useRecoilValue(NextTaskAtom);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { err, loading } = useGetNextTask();
+  const { loading } = useGetNextTask();
   const [option, setOption] = useState("");
   const navigate = useNavigate();
 
